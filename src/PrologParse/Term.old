@@ -1,0 +1,374 @@
+package PrologParse;
+
+
+import java.util.Vector;
+import java.util.Enumeration;
+
+/**
+ * A class that represents a Term in prolog.
+ * A Term is represented by a type int, a string that represents 
+ * the name/text of the term, and a Vector of subterms.
+ * @author Rupert Parson
+ * @version 1.1
+ * @see PrologParse.Clause
+ */
+public class Term extends Object {
+  public static final int FNSYM = 0;
+  public static final int VAR   = 1;
+  public static final int NUM   = 2;
+  public static final int OP    = 3;
+  public static final int LIST  = 4;
+
+  private String name;
+  private Vector subterms;
+  private int type;
+  
+  /**
+   * Constructor for constants or variables.
+   * Constructs a Term with no subterms of the specified type.
+   * @param name The text part of the Term.
+   * @param type The type of the Term (variable, function symbol, etc).
+   */
+  public Term(String name, int type) {
+    this.name = name;
+    this.type = type;
+    this.subterms = new Vector(0,0);
+  }
+
+  /**
+   * Constructor for functions (atoms).
+   * Constructs a Term with specified subterms of type Term.FNSYM.
+   * @param name The text part of the Term.
+   * @param subterms The subterms of the Term.
+   */
+  public Term(String name, Vector Subterms) {
+    this.name = name;
+    this.subterms = subterms;
+    this.type = FNSYM;
+  }  
+
+  /**
+   * Constructs a Term by parsing some tokens.
+   * @param ts A Vector of Tokens, as produced by a PrologTokenizer.
+   * @see PrologParse.PrologTokenizer
+   * @see PrologParse.Token
+   */
+  public Term(Vector ts) {
+    int START = 0;
+    int INLIST = 1;
+
+    Vector subtokens;
+    Enumeration e = ts.elements();
+    Token t;
+    String name = "";
+    if (e.hasMoreElements()) {
+      t = (Token) e.nextElement();      
+      switch (t.type()) {
+
+      case Token.VAR:
+	name = t.text();
+	if (e.hasMoreElements()) {
+	  while (e.hasMoreElements()) {
+	    t = (Token) e.nextElement();      
+	    name = name + " " + t.text();
+	  }
+	  this.type = FNSYM;
+	} else { this.type = VAR; }
+	this.name = name;
+	this.subterms = new Vector(0,0);
+	break;
+
+      case Token.NUM:
+	name = t.text();
+	if (e.hasMoreElements()) {
+	  while (e.hasMoreElements()) {
+	    t = (Token) e.nextElement();      
+	    name = name + " " + t.text();
+	  }
+	  this.type = FNSYM;
+	} else { this.type = NUM; }
+	this.name = name;
+	this.subterms = new Vector(0,0);
+	break;
+
+      case Token.PLING:
+	this.name = t.text();
+	this.type = OP;
+	this.subterms = new Vector(0,0);
+	break;
+
+      case Token.MINUS: case Token.PLUS: case Token.TIMES: case Token.HASH: 
+ 	this.name = t.text();
+ 	this.type = OP;
+	this.subterms = new Vector(2,1);
+ 	if (e.hasMoreElements()) {
+	  subtokens = new Vector(30,30);
+ 	  while (e.hasMoreElements()) {
+	    subtokens.addElement((Token) e.nextElement());
+ 	  }
+	  if (((Token) subtokens.firstElement()).type() == Token.OPEN &&
+	      ((Token) subtokens.lastElement()).type() == Token.CLOSE) {
+	    subtokens.removeElementAt(0);
+	    subtokens.removeElementAt(subtokens.size()-1);
+	  }
+	  this.subterms.addElement(new Term(subtokens));
+ 	}
+ 	break;
+
+	/* 
+	 * A list is a term, name either '|' or ',',  with 1st subterm 
+	 * the head, and 2nd subterm the tail. 
+	 */
+      case Token.OPENSQ:
+	subtokens = new Vector(30,30);
+	this.subterms = new Vector(2,0);
+	
+	boolean in_tail = false;
+	boolean in_vbar = false;
+	int bracket_level = 0;
+	
+	while (e.hasMoreElements()) {
+	  t = (Token) e.nextElement();      
+	  
+	  if (bracket_level != 0) {
+	    switch (t.type()) {
+	      
+	    case Token.OPENSQ:
+	      bracket_level++;
+	      subtokens.addElement(t);
+	      break;
+	      
+	    case Token.CLOSESQ:
+	      bracket_level--;
+	      subtokens.addElement(t);
+	      break;
+	      
+	    default:
+	      subtokens.addElement(t);
+	    }
+	  }
+	  else {
+	    switch (t.type()) {
+	      
+	    case Token.OPENSQ:
+	      bracket_level++;
+	      subtokens.addElement(t);
+	      break;
+	      
+	    case Token.CLOSESQ:
+	      if (subtokens.size() == 0) {
+		this.name = "";
+	      }
+	      else {
+		if (!(in_tail || in_vbar)) {
+		  this.subterms.addElement(new Term(subtokens));
+		  subtokens.removeAllElements();
+		  subtokens.addElement(new Token("[",Token.OPENSQ));
+		}
+		if (!in_vbar) { subtokens.addElement(t); }
+		
+		System.out.println(subtokens);
+		this.subterms.addElement(new Term(subtokens));
+		subtokens.removeAllElements();
+	      }
+	      break;
+	      
+	    case Token.COMMA:
+	      if (in_tail || in_vbar) {
+		subtokens.addElement(t);
+	      }
+	      else {
+		this.name = ",";
+		this.subterms.addElement(new Term(subtokens));
+		subtokens.removeAllElements();
+		subtokens.addElement(new Token("[",Token.OPENSQ));
+		in_tail = true;
+	      }
+	      break;
+	      
+	    case Token.VBAR:
+	      if (in_tail || in_vbar) {
+		subtokens.addElement(t);
+	      }
+	      else {
+		this.name = "|";
+		this.subterms.addElement(new Term(subtokens));
+		subtokens.removeAllElements();
+		in_vbar = true;
+	      }
+	      break;
+	      
+	    default:
+	      subtokens.addElement(t);
+	    }
+	  }
+	}
+	this.type = LIST;
+	break;	
+       
+      case Token.FNSYM: case Token.OPEN:
+	if (t.type() == Token.FNSYM) { name = t.text(); }
+	if (!e.hasMoreElements()) {
+	  this.subterms = new Vector(0,0);
+	}
+	else {
+	  subtokens = new Vector(30,30);
+	  this.subterms = new Vector(10,10);
+
+	  int bracket_level = 0;
+
+	  /*  Skip open bracket. */
+	  if (t.type() == Token.FNSYM) { t = (Token) e.nextElement();}
+	  while (e.hasMoreElements()) {
+	    t = (Token) e.nextElement();      
+	    if (bracket_level != 0) {
+	      switch (t.type()) {
+		
+	      case Token.OPEN:
+		bracket_level++;
+		subtokens.addElement(t);
+		break;
+		
+	      case Token.CLOSE:
+		bracket_level--;
+		subtokens.addElement(t);
+		break;
+		
+	      default:
+		subtokens.addElement(t);
+	      }
+	    }
+	    else {
+	      switch (t.type()) {
+		
+	      case Token.OPEN:
+		bracket_level++;
+		subtokens.addElement(t);
+		break;
+		
+	      case Token.CLOSE:
+		this.subterms.addElement(new Term(subtokens));
+		subtokens.removeAllElements();
+		break;
+	
+	      case Token.OPENSQ:
+		subtokens.addElement(t);
+		int sqbrkt_level = 1;
+		while (e.hasMoreElements() && sqbrkt_level !=0) {
+		  t = (Token) e.nextElement();      
+		  switch (t.type()) {
+		    
+		  case Token.OPENSQ:
+		    sqbrkt_level++;
+		    subtokens.addElement(t);
+		    break;
+		    
+		  case Token.CLOSESQ:
+		    sqbrkt_level--;
+		    subtokens.addElement(t);
+		    break;
+		    
+		  default:
+		    subtokens.addElement(t);
+		  }
+		}
+		this.subterms.addElement(new Term(subtokens));
+		subtokens.removeAllElements();
+		break;
+		
+	      case Token.COMMA:
+		this.subterms.addElement(new Term(subtokens));
+		subtokens.removeAllElements();
+		break;
+		
+	      default:
+		subtokens.addElement(t);
+	      }
+	    }
+	  }
+	} 
+	this.type = FNSYM;
+	this.name = name;
+	break;	
+      }
+    } else {
+      this.name = "false";
+      this.type = FNSYM;
+      this.subterms = new Vector(0,0);
+    }
+  }
+
+  /**
+   * @ return the arity of the atom.
+   */
+  public final int functionArity() { return subterms.size(); }
+
+  /**
+   * @ return the subterms of the atom.
+   */
+  public final Vector subterms() { return subterms; }
+
+  /**
+   * @ return true, iff the Term is a variable.
+   */
+  public final boolean isVariable() { return (type == VAR); }
+
+  /**
+   * @ return true, iff the Term is a list.
+   */
+  public final boolean isList() { return (type == LIST); }
+
+  /**
+   * @ return the name String of the atom.
+   */
+  public final String name() { return name; }
+
+  /**
+   * @ return the predicate symbol for this Term.
+   */
+  public final String symbol() {
+    if (type == FNSYM) { return (name + "/" + subterms.size()); }
+    else { return name; }
+  }
+
+
+
+  /**
+   * @ return a String representation of the Term.
+   */
+  public final String toString() {
+    String out;
+    if (this.isList()) {
+      out = "[";
+      Enumeration e = subterms.elements();
+      if (e.hasMoreElements()) {
+	out = out + ((Term) e.nextElement()).toString();
+	System.out.println("---:" + out + ":---");
+	Term t = (Term) e.nextElement();
+	out = out + name;
+	if (t.isList()) {
+	  out = out + t.toString().substring(1);
+	}
+	else {
+	  out = out + t.toString() + "]";
+	}
+      }
+      else {
+	out = out + "]";
+      }
+    }
+    else {
+      out = name;
+      Enumeration e = subterms.elements();
+      
+      if (e.hasMoreElements()) {
+	out = out + "(" + ((Term) e.nextElement()).toString();
+	while (e.hasMoreElements()) {
+	  out = out + ", " + ((Term) e.nextElement()).toString();
+	}
+	out = out + ")";
+      }
+    }
+    return out;
+  }
+}
