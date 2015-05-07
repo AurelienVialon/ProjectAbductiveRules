@@ -7,7 +7,7 @@ package ILPManager;
 
 /**
  *
- * @author aurelien
+ * @author Aurélien Vialon
  * 
  */
 public final class Predicat

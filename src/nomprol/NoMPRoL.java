@@ -5,9 +5,6 @@
  */
 package nomprol;
 
-import ProgolInterface.*;
-import ILPManager.Predicats;
-
 /**
  *
  * @author aurelien

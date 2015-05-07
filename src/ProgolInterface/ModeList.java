@@ -4,7 +4,6 @@ package ProgolInterface;
 import java.util.Vector;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.awt.List;
 
 /**
  * A Class representing a Vector of Mode declarations.

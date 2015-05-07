@@ -1,7 +1,5 @@
 package ProgolInterface;
 
-import java.awt.*;
-import java.io.*;
 import java.util.*;
 import PrologParse.*;
 
