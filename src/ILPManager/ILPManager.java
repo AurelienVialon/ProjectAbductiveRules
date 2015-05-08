@@ -51,7 +51,7 @@ public class ILPManager
             {
                 line = in.readLine();
                 if (line == null) break;
-                	  output.append(line + "\n");
+                output.append(line + "\n");
                 
                 if(line.contains("[Total number of clauses"))
                 {
