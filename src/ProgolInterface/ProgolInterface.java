@@ -60,6 +60,12 @@ public class ProgolInterface extends Onglet implements ActionListener
   private int panel = 1;
   
   private String ProgolPath = "/home/aurelien/Bureau/Progol/source/progol";//"/usr/jc/bin/progol";
+  private String fileName;
+
+    public String getFileName() 
+    {
+        return fileName;
+    }
   
     public String getProgolPath() 
     {
@@ -279,25 +285,30 @@ public class ProgolInterface extends Onglet implements ActionListener
    * Other Clauses (examples and background knowledge.).
    * @param filename The file into which the session is written.
    */
-  public final boolean saveSession(String filename) {
+  public final boolean saveSession(String filename) 
+  {
     try {
       Enumeration enume;
       FileWriter ws = 
 	new FileWriter(filename);
       enume = modes.elements();
-      while (enume.hasMoreElements()) {
+      while (enume.hasMoreElements()) 
+      {
 	ws.write(((Mode) enume.nextElement()).toString() + "\n");
       }
       enume = types.elements();
-      while (enume.hasMoreElements()) {
+      while (enume.hasMoreElements()) 
+      {
 	ws.write(((Clause) enume.nextElement()).toString() + "\n");
       }
       enume = clauses.elements();
-      while (enume.hasMoreElements()) {
+      while (enume.hasMoreElements()) 
+      {
 	ws.write(((Clause) enume.nextElement()).toString() + "\n");
       }
       enume = options.elements();
-      while (enume.hasMoreElements()) {
+      while (enume.hasMoreElements()) 
+      {
 	ws.write(((Clause) enume.nextElement()).toString() + "\n");
       }
       ws.close();
@@ -374,6 +385,7 @@ public class ProgolInterface extends Onglet implements ActionListener
 	}
       }
       rs.close();
+      this.fileName = filename;
     }
     catch(IOException e) { System.out.println("Whoops: " + e.toString()); }
     updateAll();

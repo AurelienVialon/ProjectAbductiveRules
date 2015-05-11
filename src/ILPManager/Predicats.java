@@ -120,8 +120,7 @@ public class Predicats extends HashMap<String, ArrayList<Predicat>>
         }       
         return l;
     }
-    
-    //Fonction qui renvoie tous les prédicats contenus en mémoire, sans les séparer seln leurs préfixes :
+    //Fonction qui renvoie tous les prédicats contenus en mémoire, sans les séparer selon leurs préfixes :
     public ArrayList<String> getListPredicat()
     {
         ArrayList<String> l = new ArrayList<>();

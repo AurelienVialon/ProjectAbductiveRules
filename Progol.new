@@ -69,6 +69,8 @@ sister_of(sarah, judy).
 sister_of(laura, brice).
 :- sister_of(brice, laura).
 sister_of(laura, kevin).
+aunt_of(A, B) :- sister_of(A, C).
+sister_of(A, B) :- parent_of(C, A), female(A), parent_of(C, B).
 :- set(posonly)?
 :- set(r, 1000)?
 :- set(h, 1000)?

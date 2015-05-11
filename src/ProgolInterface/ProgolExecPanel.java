@@ -1,10 +1,12 @@
 package ProgolInterface;
 
 import ILPManager.ILPManager;
+import PrologParse.Clause;
 import myawt.GridBag;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.ArrayList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -93,31 +95,35 @@ class ProgolExecPanel extends Panel implements ActionListener
   {
     session.saveSession("tmppgli.pl");
     Runtime now = Runtime.getRuntime();
-         
-   // try {
-      try {
-	String line;
-                
+
+      try 
+      {
 	pp = now.exec(this.session.getProgolPath() + " tmppgli");
            
 	InputStream s = pp.getInputStream();
 	BufferedReader in
 	  = new BufferedReader(new InputStreamReader(s));
-        BufferedReader sauve
-	  = new BufferedReader(new InputStreamReader(s));
         
         this.pm.ParseResults(in, output);
         this.pm.UpdateResults();
-                
+
+        ArrayList<String> temp = this.pm.predicats.getListPredicat();
+       
+        for ( String st : temp )
+            this.session.clauses.addElement(new Clause(st));
+        
+        this.session.saveSession(this.session.getFileName().replaceFirst(".pl", ".new.pl"));
+        
 	return 1;
       }
-      catch (IOException e) {
-	System.out.println("Whoops: " + e);
+      catch (IOException e) 
+      {
+	System.out.println("Oooups: " + e);
 	return 1;
       }
   }
 
-  private final void saveOutput(String filename) 
+  private void saveOutput(String filename) 
   {
     try 
     {

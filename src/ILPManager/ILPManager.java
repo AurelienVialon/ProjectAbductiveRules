@@ -22,7 +22,7 @@ import nomprol.FenetrePrincipale;
 public class ILPManager
 { 
     private final FenetrePrincipale fen;
-    private Predicats predicats;
+    public Predicats predicats;
     
     public ILPManager ( FenetrePrincipale  f )
     {
