@@ -125,44 +125,7 @@ public class ProgolInterface extends Onglet implements ActionListener
     prev = new Bouton("");
     
     next.addActionListener(this);
-    prev.addActionListener(this);
-    
-    next.addMouseListener(new MouseListener() 
-    { 
-        public void mouseClicked(MouseEvent e){}
-        public void mousePressed(MouseEvent e){}
-        public void mouseReleased(MouseEvent e){}
-        public void mouseEntered(MouseEvent e)
-        {
-            next.setBackground(Color.gray);
-            next.setForeground(Color.white);
-        }
-        public void mouseExited(MouseEvent e)
-        {
-            next.setBackground(Color.white);
-            next.setForeground(Color.gray);
-        }});
-    
-    prev.addMouseListener(new MouseListener() {
-        public void mouseClicked(MouseEvent e){}
-        public void mousePressed(MouseEvent e){}
-        public void mouseReleased(MouseEvent e){}
-        public void mouseEntered(MouseEvent e)
-        {
-            prev.setBackground(Color.gray);
-            prev.setForeground(Color.white);
-        }
- 
-        /**
-         * Invoked when the mouse exits a component.
-         */
-        public void mouseExited(MouseEvent e)
-        {
-            prev.setBackground(Color.white);
-            prev.setForeground(Color.gray);
-        }
-    });
-    
+    prev.addActionListener(this);  
     
     label = new JLabel();
     
@@ -396,7 +359,7 @@ public class ProgolInterface extends Onglet implements ActionListener
    {
       panel = 1;
       label();
-      this.f.onglets_ILP.setSelectedComponent(this);
+      this.f.ILP_Part.setSelectedComponent(this);
       card.first(cardpanel);
       modes.removeAll();
       types.removeAll();

@@ -7,10 +7,10 @@ package nomprol;
 
 /**
  *
- * @author aurelien
+ * @author Aurélien Vialon
  */
-public class NoMPRoL {
-
+public class NoMPRoL 
+{
     /**
      * @param args the command line arguments
      */

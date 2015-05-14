@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ILPManager;
+package ILP;
 
 /**
  *
@@ -46,8 +46,7 @@ public final class Predicat
     public String getClauses()
     {
         return this.Clauses;
-    }
-    
+    }   
 
     public String getPredicat()
     {

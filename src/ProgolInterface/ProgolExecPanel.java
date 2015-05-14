@@ -1,6 +1,6 @@
 package ProgolInterface;
 
-import ILPManager.ILPManager;
+import ILP.ILPManager;
 import PrologParse.Clause;
 import myawt.GridBag;
 import java.awt.*;

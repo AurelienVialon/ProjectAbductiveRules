@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ILPManager;
+package ILP;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +13,8 @@ import java.util.Set;
 
 /**
  *
- * @author aurelien
+ * @author Aurélien Vialon
+ * 
  */
 public class Predicats extends HashMap<String, ArrayList<Predicat>> 
 {  

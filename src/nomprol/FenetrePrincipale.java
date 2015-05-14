@@ -6,6 +6,8 @@
 package nomprol;
 
 
+import ASP.ASPManager;
+import MVC.Controleur;
 import ProgolInterface.ProgolInterface;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -38,14 +40,17 @@ public class FenetrePrincipale extends JFrame
       private final JMenuItem quitter;
       
       private final JTabbedPane onglets;
-      public final JTabbedPane onglets_ILP;
+      public final JTabbedPane ILP_Part;
+      public final JTabbedPane ASP_Part;
       
       public final JComponent ILP_Engine;
       private final JPanel ILP_Results;
       public JList<String> ILP_Predicats_Results = null;
       public JTextArea ILP_Clauses_Results = null;
       
-      private final JComponent ASP_Engine;
+      private final JComponent ASP_Content;
+      private final JComponent ASP_Results;
+      
       private final JComponent Probabilistic_Engine;
 
     public FenetrePrincipale()
@@ -64,8 +69,9 @@ public class FenetrePrincipale extends JFrame
         //Définition du menu "Action" :
         this.actionmenu = new JMenu("Actions");
                 
-        this.quitter = new JMenuItem("Quitter");
-        this.quitter.addActionListener(new ActionListener() {
+        this.quitter = new JMenuItem("Quit");
+        this.quitter.addActionListener(new ActionListener() 
+        {
             @Override
             public void actionPerformed(ActionEvent ae) 
             {
@@ -81,9 +87,9 @@ public class FenetrePrincipale extends JFrame
         this.onglets.setSize(WIDTH, 50);
         
         //Définition de l'onglet de gestion d'ILP :        
-        this.onglets_ILP = new JTabbedPane();
-        this.onglets_ILP.setName("ILP");
-        this.onglets_ILP.setBackground(Color.white);
+        this.ILP_Part = new JTabbedPane();
+        this.ILP_Part.setName("ILP");
+        this.ILP_Part.setBackground(Color.white);
         
         this.ILP_Predicats_Results = new JList ();
         this.ILP_Predicats_Results.setBorder(BorderFactory.createLineBorder(Color.gray));
@@ -103,14 +109,14 @@ public class FenetrePrincipale extends JFrame
         
         this.ILP_Engine = new ProgolInterface(this);
         this.ILP_Engine.setBackground(Color.white);
-        this.onglets_ILP.add(this.ILP_Engine);
+        this.ILP_Part.add(this.ILP_Engine);
                 
         ((ProgolInterface)this.ILP_Engine).loadSession("/home/aurelien/Bureau/Projet/famille.pl");
         //((ProgolInterface)this.ILP_Engine).loadSession("/home/aurelien/Bureau/Progol/examples4.2/animals.pl");
         //((ProgolInterface)this.ILP_Engine).loadSession("/home/aurelien/Bureau/Progol/examples4.2/chess.pl");
         
         this.ILP_Results = new JPanel();
-        this.ILP_Results.setName("Resultats");
+        this.ILP_Results.setName("Results");
         
         this.ILP_Results.setLayout(new GridBagLayout());
         this.ILP_Results.setBackground(Color.white);
@@ -124,7 +130,7 @@ public class FenetrePrincipale extends JFrame
         p1.setLayout(new GridBagLayout());
         p2.setLayout(new GridBagLayout());
         
-        GridBag.constrain(p1, new JLabel("Prédicats :"), 0, 0, 2, 1,
+        GridBag.constrain(p1, new JLabel("Predicats :"), 0, 0, 2, 1,
 		      GridBagConstraints.NONE, 
 		      GridBagConstraints.NORTHWEST,
 		      1.0, 0.0, 10, 0, 0, 0);
@@ -134,7 +140,7 @@ public class FenetrePrincipale extends JFrame
 		      1.0, 1.0, 0, 0, 10, 0);
 
         
-        GridBag.constrain(p2, new JLabel("Règles :"), 0, 0, 2, 1,
+        GridBag.constrain(p2, new JLabel("Rules :"), 0, 0, 2, 1,
 		      GridBagConstraints.NONE, 
 		      GridBagConstraints.NORTHWEST,
 		      1.0, 0.0, 10, 0, 0, 0);
@@ -152,19 +158,38 @@ public class FenetrePrincipale extends JFrame
 		      GridBagConstraints.NORTHEAST, 
 		      1.0, 1.0, 0, 10, 0, 10); 
     
-        this.onglets_ILP.add(this.ILP_Results);
+        this.ILP_Part.add(this.ILP_Results);
         
         //Définition de l'onglet de gestion de DLV : 
-        this.ASP_Engine = new Onglet();
-        this.ASP_Engine.setName("ASP");
+        this.ASP_Part = new JTabbedPane();
+        
+        this.ASP_Content = new Onglet();
+            this.ASP_Content.setName("Input");
+            this.ASP_Content.setLayout(new GridBagLayout());
+        this.ASP_Results = new Onglet();
+            this.ASP_Results.setName("Results");
+            this.ASP_Results.setLayout(new GridBagLayout());
+        
+        this.ASP_Part.setName("ASP");
+        
+        //Zone de définition du MVC !
+  
+        Controleur ASP_Manager = new ASPManager();   
+        GridBag.constrain(this.ASP_Results, ASP_Manager.Init(), 1, 0, 1, 1, 
+		      GridBagConstraints.BOTH,
+		      GridBagConstraints.NORTHEAST, 
+		      1.0, 1.0, 0, 10, 0, 10);
+        
+        this.ASP_Part.add(this.ASP_Content);
+        this.ASP_Part.add(this.ASP_Results);       
         
         //Définition de l'onglet de gestion de PROGOL : 
         this.Probabilistic_Engine = new Onglet();
-        this.Probabilistic_Engine.setName("Probabilités");
+        this.Probabilistic_Engine.setName("Probabilities");
         
         //Ajout des onglets :
-        this.ajouterOnglet(this.onglets_ILP);       
-        this.ajouterOnglet(this.ASP_Engine);
+        this.ajouterOnglet(this.ILP_Part);       
+        this.ajouterOnglet(this.ASP_Part);
         this.ajouterOnglet(this.Probabilistic_Engine);
       
         this.setJMenuBar(menubar);
@@ -184,7 +209,7 @@ public class FenetrePrincipale extends JFrame
     }
     
     //Les méthodes de gestion d'ajout d'onglets :
-    public void ajouterOnglet ( JComponent p )
+    public final void ajouterOnglet ( JComponent p )
     {
         this.onglets.addTab("<html><body leftmargin=15 topmargin=8 marginwidth=15 marginheight=5>" + p.getName() + "</body></html>", p);
     }    

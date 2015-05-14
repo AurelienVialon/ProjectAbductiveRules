@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ILPManager;
+package ILP;
 
 
 import java.io.BufferedReader;
@@ -141,6 +141,7 @@ public class ILPManager
         }
     }
     
+    @Override
     public String toString()
     {
         return this.predicats.toString();
