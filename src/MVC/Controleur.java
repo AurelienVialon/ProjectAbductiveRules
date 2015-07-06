@@ -3,14 +3,11 @@
  * and open the template in the editor.
  */
 package MVC;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 /**
  *
  * @author Aurélien Vialon
  */
-public abstract class Controleur implements ActionListener 
+public abstract class Controleur 
 {  
     protected Modele m;
     
@@ -19,12 +16,9 @@ public abstract class Controleur implements ActionListener
         super();
     }
     
-    @Override
-    public abstract void actionPerformed(ActionEvent e);
- 
-       
+      
     //Méthodes d'initialisation des modèles et vue.
-    public Vue Init ()
+    public Vue Init ( )
     {
         this.m = this.initModele();
         Vue v = this.initVue();
@@ -37,6 +31,11 @@ public abstract class Controleur implements ActionListener
         return v;
     }
     
+    public void reprise ()
+    {
+        this.m.retour();
+    }
+    
     protected abstract Modele initModele();    
-    protected abstract Vue initVue(); 
+    protected abstract Vue initVue( ); 
 }

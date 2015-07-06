@@ -5,18 +5,20 @@
 package MVC;
 
 
+import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 /**
  *
  * @author Aurélien Vialon
  */
-public abstract class Vue extends JPanel implements Observer
+public abstract class Vue extends JPanel implements Observer, ActionListener
 {
     protected Controleur c;
     
-    public Vue ( )
+    public Vue ( JFrame f )
     {
         super();
         this.c = null;

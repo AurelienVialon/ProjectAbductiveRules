@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author aurelien
+ * @author Aurelien Vialon
  */
 public class Onglet extends JPanel
 {

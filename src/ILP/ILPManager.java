@@ -6,6 +6,10 @@
 package ILP;
 
 
+import Interfaces.ILPtoASP;
+import MVC.Controleur;
+import MVC.Modele;
+import MVC.Vue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,15 +23,17 @@ import nomprol.FenetrePrincipale;
  * @author Aurélien Valon
  * 
  */
-public class ILPManager
+public class ILPManager extends Controleur
 { 
-    private final FenetrePrincipale fen;
+    private final FenetrePrincipale f;
     public Predicats predicats;
+    
+    public ILPtoASP ilasp;
     
     public ILPManager ( FenetrePrincipale  f )
     {
-        this.fen = f;
-        this.fen.ILP_Predicats_Results.addMouseListener(new java.awt.event.MouseAdapter()
+        this.f = f;
+        this.f.ILP_Predicats_Results.addMouseListener(new java.awt.event.MouseAdapter()
         {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent mouseEvent)
@@ -115,29 +121,29 @@ public class ILPManager
     }
     public void UpdateResults()
     {
-        this.fen.resetIPLResults();
+        this.f.resetIPLResults();
 
-        this.fen.ILP_Predicats_Results.setListData(this.predicats.getTabPrefix());
-        this.fen.ILP_Predicats_Results.setSelectedIndex(0);
+        this.f.ILP_Predicats_Results.setListData(this.predicats.getTabPrefix());
+        this.f.ILP_Predicats_Results.setSelectedIndex(0);
         
-        String[] tab = this.predicats.getTabPredicat(this.fen.ILP_Predicats_Results.getSelectedValue());
+        String[] tab = this.predicats.getTabPredicat(this.f.ILP_Predicats_Results.getSelectedValue());
         
-        this.fen.ILP_Clauses_Results.setText("");
+        this.f.ILP_Clauses_Results.setText("");
         
         for(String s : tab )
         {
-            this.fen.ILP_Clauses_Results.append(s + "\n"); 
+            this.f.ILP_Clauses_Results.append(s + "\n"); 
         }
     }
     public void ChangeResults()
     {       
-        String[] tab = this.predicats.getTabPredicat(this.fen.ILP_Predicats_Results.getSelectedValue());
+        String[] tab = this.predicats.getTabPredicat(this.f.ILP_Predicats_Results.getSelectedValue());
         
-        this.fen.ILP_Clauses_Results.setText("");
+        this.f.ILP_Clauses_Results.setText("");
         
         for(String s : tab )
         {
-            this.fen.ILP_Clauses_Results.append(s + "\n"); 
+            this.f.ILP_Clauses_Results.append(s + "\n"); 
         }
     }
     
@@ -145,5 +151,21 @@ public class ILPManager
     public String toString()
     {
         return this.predicats.toString();
+    }
+
+    @Override
+    protected Modele initModele() 
+    {
+        return null;
+    }
+
+    @Override
+    protected Vue initVue () 
+    {
+        return null;
+    }
+    public void setInterface (ILPtoASP i)
+    {
+        this.ilasp = i;
     }
 }

@@ -8,37 +8,37 @@ package ASP;
 import MVC.Controleur;
 import MVC.Modele;
 import MVC.Vue;
-import java.awt.event.ActionEvent;
-import javax.swing.JButton;
+import nomprol.FenetrePrincipale;
 /**
  *
  * @author Aurélien Vialon
  */
 public class ASPManager extends Controleur
-{           
-    public ASPManager()
+{      
+    FenetrePrincipale f;
+    
+    Modele m;
+    
+    public ASPManager( FenetrePrincipale f)
     {
-	    
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) 
-    {
-        if(e.getSource() instanceof JButton && "ASPRun".equals(((JButton)e.getSource()).getName()))
-        {
-            this.m.retour();
-        }
+	this.f = f;
     }
 
     @Override
     protected Modele initModele() 
     {
-        return new ASP.ASPEngine("/home/aurelien/Bureau/DLV/dlv", "/home/aurelien/Bureau/DLV/famille.pl");
+        this.m = new ASP.ASPEngine("/home/aurelien/Bureau/DLV/dlv");
+        return m;
     }
 
     @Override
-    protected Vue initVue() 
+    protected Vue initVue () 
     {
-        return new ASP.ASPDisplay(this);
+        return new ASP.ASPDisplay(f, this);
+    }
+    
+    public Modele donneModele ()
+    {
+        return this.m;
     }
 }

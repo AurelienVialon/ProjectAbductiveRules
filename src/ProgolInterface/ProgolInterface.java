@@ -1,6 +1,8 @@
 package ProgolInterface;
 
 
+
+import ILP.ILPManager;
 import java.awt.*;
 import java.io.*;
 import java.util.Enumeration;
@@ -9,8 +11,6 @@ import java.awt.event.ActionEvent;
 import myawt.InfoDialog;
 import myawt.GridBag;
 import PrologParse.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -33,14 +33,15 @@ import nomprol.Onglet;
  */
 public class ProgolInterface extends Onglet implements ActionListener 
 { 
-  protected FenetrePrincipale f;  
+  public FenetrePrincipale f;  
+  public ILPManager pm;
     
-  protected ModeList modes;
+  public ModeList modes;
   protected ClauseList options;
-  protected ClauseList types;
-  protected ClauseList clauses;
+  public ClauseList types;
+  public ClauseList clauses;
 
-  private JMenu ActionsMenu, helpmenu;
+  private JMenu ilpMenu, helpmenu;
   private JMenuItem newSession, loadSession, saveSession;
   private JMenuItem help, about;
 
@@ -96,6 +97,8 @@ public class ProgolInterface extends Onglet implements ActionListener
     this.setName("Progol");
     
     this.f =f;
+    this.pm = new ILPManager(this.f);
+        
     this.setFont(new Font("Helvetica", Font.PLAIN, 12));
     this.setBackground(Color.white);
     
@@ -143,12 +146,13 @@ public class ProgolInterface extends Onglet implements ActionListener
     loadSession.addActionListener(this);
     saveSession = new JMenuItem("Save Session");
     saveSession.addActionListener(this);
-    
-    f.ajouterAction(newSession);
-    f.ajouterAction(loadSession);
-    f.ajouterAction(saveSession);
 
-
+    this.ilpMenu = new JMenu ("ILP");
+        this.ilpMenu.add(newSession);
+        this.ilpMenu.add(loadSession);
+        this.ilpMenu.add(saveSession);
+    this.f.ajouterMenuBar(ilpMenu);
+    /*
     help = new JMenuItem("Help");
     help.addActionListener(this);
     about = new JMenuItem("About");
@@ -158,7 +162,7 @@ public class ProgolInterface extends Onglet implements ActionListener
     helpmenu.add(about);
 
     f.ajouterMenuBar(helpmenu);
-    //f.menubar.setHelpMenu(helpmenu);
+        */
       
     this.setLayout(gridbag);
     

@@ -22,8 +22,6 @@ import javax.swing.JTextArea;
  */
 class ProgolExecPanel extends Panel implements ActionListener 
 {
-  private final ILPManager pm;
-  
   private final ProgolInterface session;
   private final JTextArea output;
   private final Button run, stop, save, clear;
@@ -41,9 +39,7 @@ class ProgolExecPanel extends Panel implements ActionListener
   public ProgolExecPanel(ProgolInterface session) 
   {
     this.session = session;
-    
-    this.pm = new ILPManager(this.session.f);
-    
+        
     this.output = new JTextArea("",24,80);
 
     JScrollPane sp = new JScrollPane(this.output, 
@@ -104,15 +100,18 @@ class ProgolExecPanel extends Panel implements ActionListener
 	BufferedReader in
 	  = new BufferedReader(new InputStreamReader(s));
         
-        this.pm.ParseResults(in, output);
-        this.pm.UpdateResults();
+        this.session.pm.ParseResults(in, output);
+        this.session.pm.UpdateResults();
 
-        ArrayList<String> temp = this.pm.predicats.getListPredicat();
+        ArrayList<String> temp = this.session.pm.predicats.getListPredicat();
        
         for ( String st : temp )
             this.session.clauses.addElement(new Clause(st));
         
-        this.session.saveSession(this.session.getFileName().replaceFirst(".pl", ".new.pl"));
+        String fileName = this.session.getFileName().replaceFirst(".pl", ".new.pl");
+        
+        this.session.saveSession(fileName);
+        this.session.pm.ilasp.givetoASP(fileName);
         
 	return 1;
       }

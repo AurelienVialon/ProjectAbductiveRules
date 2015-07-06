@@ -8,15 +8,21 @@ package ASP;
 import MVC.Controleur;
 import MVC.Vue;
 import java.awt.Color;
+import java.awt.FileDialog;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.Observable;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import myawt.GridBag;
 import nomprol.Bouton;
+import nomprol.FenetrePrincipale;
 
 /**
  *
@@ -25,11 +31,17 @@ import nomprol.Bouton;
 public class ASPDisplay extends Vue
 {
     private JTextArea ta;
+    private FenetrePrincipale f;
     
     private JButton runB;
     
-    public ASPDisplay (Controleur c)
+    private JMenu menu;
+    JMenuItem loadFile;
+    
+    public ASPDisplay (FenetrePrincipale f, Controleur c)
     {
+        super(c);
+        this.f = f;
         this.ta = new JTextArea("ASP_Result",24,80);
         this.ta.setEditable(false);
                 
@@ -41,7 +53,7 @@ public class ASPDisplay extends Vue
         
         this.runB = new Bouton("Run");
         this.runB.setName("ASPRun");
-        this.runB.addActionListener(c);
+        this.runB.addActionListener(this);
         
         this.setLayout(new GridBagLayout());
                 this.setBackground(Color.white);
@@ -55,6 +67,13 @@ public class ASPDisplay extends Vue
                         GridBagConstraints.BOTH, 
                         GridBagConstraints.CENTER,
                         1.0, 0.2, 1, 1, 1, 1);           
+        
+        this.menu = new JMenu("ASP");
+        loadFile = new JMenuItem("Load pl file");
+        loadFile.addActionListener(this);
+        this.menu.add(loadFile);
+        
+        f.ajouterMenuBar(menu);
     }
 
     @Override
@@ -63,6 +82,31 @@ public class ASPDisplay extends Vue
         if(o instanceof ASPEngine)
         {
             this.ta.setText(ob.toString());
+        }
+    }
+    
+    @Override
+    public final void actionPerformed(ActionEvent e) 
+    {
+        if (e.getSource() == loadFile) 
+        {
+          FileDialog fl = new FileDialog(this.f, "Load Session", FileDialog.LOAD);
+          fl.pack();
+          fl.setVisible(true);
+          String fn = fl.getFile();
+          String fd = fl.getDirectory();
+          if (fn != null) 
+          {
+            File fi = new File(fd,fn);
+            if (fi.canRead()) 
+            {
+              
+            }
+          }
+        }
+        else if(e.getSource() == this.runB)
+        {
+            this.c.reprise();
         }
     }
 }

@@ -42,15 +42,7 @@ public class ASPEngine extends Modele
         super();
         
         this.cheminASP = c;
-        this.cheminFichier = "";
-        this.m = new Message();
-    }
-    public ASPEngine(String c, String f)
-    {
-        super();
-        
-        this.cheminASP = c;
-        this.cheminFichier = f;
+        this.cheminFichier = "/home/aurelien/Bureau/Projet/famille_ASP.pl";
         this.m = new Message();
     }
     
