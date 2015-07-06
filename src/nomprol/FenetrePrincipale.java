@@ -7,7 +7,7 @@ package nomprol;
 
 
 import ASP.ASPManager;
-import MVC.Controleur;
+import Interfaces.ILPtoASP;
 import ProgolInterface.ProgolInterface;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -35,9 +35,10 @@ import myawt.GridBag;
 public class FenetrePrincipale extends JFrame
 {
       private final JMenuBar menubar;
-      private final JMenu actionmenu;
-      
+      private final JMenu fichierMenu;
+            
       private final JMenuItem quitter;
+
       
       private final JTabbedPane onglets;
       public final JTabbedPane ILP_Part;
@@ -65,10 +66,8 @@ public class FenetrePrincipale extends JFrame
         
         //Définition du menu :
         this.menubar = new JMenuBar();
+        this.fichierMenu = new JMenu();
         
-        //Définition du menu "Action" :
-        this.actionmenu = new JMenu("Actions");
-                
         this.quitter = new JMenuItem("Quit");
         this.quitter.addActionListener(new ActionListener() 
         {
@@ -78,8 +77,8 @@ public class FenetrePrincipale extends JFrame
                 System.exit(0);
             }
         });
-        this.actionmenu.add(this.quitter);
-        this.menubar.add(actionmenu);
+        this.fichierMenu.add(this.quitter);
+        this.menubar.add(fichierMenu);
         
         //Définition du gestionnaire d'onglets : 
         this.onglets = new JTabbedPane();
@@ -107,6 +106,8 @@ public class FenetrePrincipale extends JFrame
                                             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         
+        this.fichierMenu.addSeparator();
+ 
         this.ILP_Engine = new ProgolInterface(this);
         this.ILP_Engine.setBackground(Color.white);
         this.ILP_Part.add(this.ILP_Engine);
@@ -174,11 +175,17 @@ public class FenetrePrincipale extends JFrame
         
         //Zone de définition du MVC !
   
-        Controleur ASP_Manager = new ASPManager();   
-        GridBag.constrain(this.ASP_Results, ASP_Manager.Init(), 1, 0, 1, 1, 
+        ASPManager ASP_Manager = new ASPManager(this);   
+        GridBag.constrain(this.ASP_Results, ASP_Manager.Init( ), 1, 0, 1, 1, 
 		      GridBagConstraints.BOTH,
 		      GridBagConstraints.NORTHEAST, 
 		      1.0, 1.0, 0, 10, 0, 10);
+        
+        //Define the interface between ILP qnd ASP
+        ILPtoASP ilasp= new ILPtoASP(ASP_Manager);
+        
+        ((ProgolInterface)this.ILP_Engine).pm.setInterface(ilasp);
+                
         
         this.ASP_Part.add(this.ASP_Content);
         this.ASP_Part.add(this.ASP_Results);       
@@ -203,9 +210,9 @@ public class FenetrePrincipale extends JFrame
     {
         this.menubar.add(m);
     }
-    public void ajouterAction ( JMenuItem mi )
+    public void ajouterFichierMenu ( JMenuItem m )
     {
-        this.actionmenu.add(mi);
+        this.fichierMenu.add(m);
     }
     
     //Les méthodes de gestion d'ajout d'onglets :
