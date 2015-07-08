@@ -1,6 +1,5 @@
-package ProgolInterface;
+package ILP;
 
-import ILP.ILPManager;
 import MVC.Vue;
 import myawt.GridBag;
 import java.awt.*;
@@ -20,7 +19,7 @@ import nomprol.FenetrePrincipale;
  * @author Rupert Parson
  * @version 2.0
  */
-class ProgolExecPanel extends Vue 
+class ILPDisplay extends Vue 
 {
   private final ILPManager manager;
   private final JTextArea output;
@@ -35,7 +34,7 @@ class ProgolExecPanel extends Vue
    * in its various Lists.
    * @param session  The ProgolInterface session.
    */
-  public ProgolExecPanel(FenetrePrincipale fen) 
+  public ILPDisplay(FenetrePrincipale fen) 
   {
     super(fen);
     this.manager = ((FenetrePrincipale)this.f).ILP_Manager;

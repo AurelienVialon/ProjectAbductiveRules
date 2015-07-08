@@ -1,7 +1,6 @@
 package ProgolInterface;
 
 
-
 import ILP.Engine.ILPMemory;
 import java.awt.*;
 import java.io.*;
@@ -45,7 +44,6 @@ public class ProgolInterface extends Onglet implements ActionListener
   private TypeSelectPanel typesPanel;
   private ModeSelectPanel modesPanel;
   private ClauseSelectPanel clausePanel;
-  private ProgolExecPanel progolPanel;
 
   private CardLayout card = new CardLayout(10,10);
   private GridLayout grid = new GridLayout(1,2,20,40);
@@ -81,7 +79,6 @@ public class ProgolInterface extends Onglet implements ActionListener
     typesPanel = new TypeSelectPanel(this.f.ILP_Manager);
     modesPanel = new ModeSelectPanel(this.f.ILP_Manager);
     clausePanel = new ClauseSelectPanel(this.f);
-    progolPanel = new ProgolExecPanel(this.f);
 
     cardpanel = new JPanel();
     cardpanel.setBackground(Color.white);
@@ -89,7 +86,7 @@ public class ProgolInterface extends Onglet implements ActionListener
     cardpanel.add("North",typesPanel);
     cardpanel.add("North",modesPanel);
     cardpanel.add("North",clausePanel);
-    cardpanel.add("North",progolPanel);
+    cardpanel.add("North",f.ILP_Display);
 
     buttonpanel = new JPanel();
     buttonpanel.setBackground(Color.white);
@@ -146,12 +143,6 @@ public class ProgolInterface extends Onglet implements ActionListener
 	      GridBagConstraints.CENTER,
 	      1.0, 0.0, 10, 10, 10, 10);
   }
-
-    public ProgolExecPanel getProgolPanel() 
-    {
-        return progolPanel;
-    }
-
   /**
    * Update all the panels in this session.
    */

@@ -89,8 +89,7 @@ public class ILPManager extends Controleur
     @Override
     protected Vue initVue () 
     {
-        ProgolExecPanel l;
-        return new ProgolExecPanel ();
+        return new ILPDisplay(this.f);
     }
     public void setInterface (ASPManager i)
     {
