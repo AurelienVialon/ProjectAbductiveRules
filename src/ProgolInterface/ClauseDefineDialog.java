@@ -1,5 +1,8 @@
 package ProgolInterface;
 
+import ILP.Engine.ILPMemory;
+import ILP.Engine.ModeArg;
+import ILP.Engine.Mode;
 import myawt.GridBag;
 import PrologParse.*;
 import java.awt.*;
@@ -23,7 +26,7 @@ import nomprol.FenetrePrincipale;
 class ClauseDefineDialog extends Dialog implements ActionListener 
 {
   private FenetrePrincipale f;
-  private ProgolInterface pi;
+  private ILPMemory mem;
   private Button okay, cancel;
   private Checkbox positive, negative;
   private CheckboxGroup cbg;
@@ -41,12 +44,12 @@ class ClauseDefineDialog extends Dialog implements ActionListener
    * @param session The Progol Interface session.
    * @param symbol The predicate symbol of the clause to be defined.
    */
-  public ClauseDefineDialog(FenetrePrincipale f, ProgolInterface pi,  String symbol) 
+  public ClauseDefineDialog(FenetrePrincipale f, ILPMemory mem,  String symbol) 
   {
     super((JFrame) f, true);
 
     this.f = f;
-    this.pi = pi;
+    this.mem = mem;
     
     this.setLocation(new Point(f.getLocation().x+150,
 			       f.getLocation().y+200));
@@ -99,7 +102,7 @@ class ClauseDefineDialog extends Dialog implements ActionListener
 	}
 	else {
 	  argcomps[i] = new Choice();
-	  Enumeration e = pi.types.definition(type +"/1").elements();
+	  Enumeration e = mem.getTypes().definition(type +"/1").elements();
 	  while (e.hasMoreElements()) {
 	    Clause c = (Clause) e.nextElement();
 	    String s = 
@@ -155,8 +158,8 @@ class ClauseDefineDialog extends Dialog implements ActionListener
   }
 
   private final Mode getModeFor(String symbol) {
-    if (pi.modes.hasModeFor(symbol)) {
-      return pi.modes.getModeFor(symbol);    
+    if (mem.getModes().hasModeFor(symbol)) {
+      return mem.getModes().getModeFor(symbol);    
     }
     else {
       String name = symbol.substring(0,symbol.lastIndexOf("/"));

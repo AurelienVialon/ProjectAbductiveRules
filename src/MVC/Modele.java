@@ -87,15 +87,19 @@ public abstract class Modele extends Observable implements Runnable
     //Méthodes pour ajouter des liens entre le modele courant et des observateurs.
     public void ajouter_lien( Observer ob)
     {
-        this.addObserver(ob);
+        if(ob != null)
+            this.addObserver(ob);
     }
     
     public void ajouter_lien (ArrayList <Observer> obs)
     {
-        for (Observer ob : obs) 
+        if(obs != null)
         {
-            this.addObserver(ob);
-        }   
+            for (Observer ob : obs) 
+            {
+                this.addObserver(ob);
+            }   
+        }
     }
     
     //Méthodes pour enlever des liens entre le modele courant et ses observateurs.

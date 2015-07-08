@@ -1,5 +1,7 @@
 package ProgolInterface;
 
+import ILP.Engine.ILPMemory;
+import ILP.ILPManager;
 import myawt.GridBag;
 import PrologParse.*;
 import java.awt.*;
@@ -7,6 +9,7 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import nomprol.FenetrePrincipale;
 
 /** 
  * A Panel to allow one to add and view Clauses by predicate symbol.
@@ -17,7 +20,8 @@ import javax.swing.JPanel;
  */
 class ClauseSelectPanel extends JPanel implements ActionListener, ItemListener 
 {
-  private final ProgolInterface session;
+  private FenetrePrincipale f;
+  private final ILPMemory mem;
   private final java.awt.List predicates, clauses;
   private final JButton add, delete, manual;
   private final JPanel buttonpanel;
@@ -31,9 +35,10 @@ class ClauseSelectPanel extends JPanel implements ActionListener, ItemListener
    * in its various Lists.
    * @param session  The ProgolInterface session.
    */
-  public ClauseSelectPanel(ProgolInterface session) 
+  public ClauseSelectPanel(FenetrePrincipale fen) 
   {
-    this.session = session;
+    this.f = fen;
+    this.mem = this.f.ILP_Manager.getILPMemory();
     this.setBackground(Color.white);
     
     predicates = new java.awt.List(15,false);
@@ -94,7 +99,7 @@ class ClauseSelectPanel extends JPanel implements ActionListener, ItemListener
     delete.setEnabled(false);
     predicates.removeAll();
     clauses.removeAll();
-    for (Enumeration e = session.clauses.definitions().keys();
+    for (Enumeration e = mem.getClauses().definitions().keys();
 	 e.hasMoreElements();
 	 predicates.addItem((String) e.nextElement())) {}
   }
@@ -107,19 +112,19 @@ class ClauseSelectPanel extends JPanel implements ActionListener, ItemListener
       String s;
       if (event.getSource() == manual) { s = ""; }
       else { s = predicates.getSelectedItem(); }
-      ClauseDefineDialog cdd = new ClauseDefineDialog(session.f, session, s);
+      ClauseDefineDialog cdd = new ClauseDefineDialog(f, mem, s);
       cdd.setVisible(true);;
       if (!cdd.cancelled()) {
 	String cl = cdd.getClause();
 	Clause cls = new Clause(cl);
-	session.clauses.addElement(cls);
+	mem.getClauses().addElement(cls);
 	if (event.getSource() == manual) { update(); }
 	else { clauses.addItem(cl);}
       }
     }
     else if (event.getSource() == delete) {
       int pos = clauses.getSelectedIndex();
-      session.clauses.removeDefinitionAt(predicates.getSelectedItem(), pos);
+      mem.getClauses().removeDefinitionAt(predicates.getSelectedItem(), pos);
       clauses.delItem(pos);
       delete.setEnabled(false);
     }
@@ -132,7 +137,7 @@ class ClauseSelectPanel extends JPanel implements ActionListener, ItemListener
     java.awt.List selected = (java.awt.List) event.getItemSelectable();
     if (event.getStateChange() == ItemEvent.SELECTED) {
       if (selected == predicates) {
-	session.clauses.listDefinition(predicates.getSelectedItem(), clauses);
+	mem.getClauses().listDefinition(predicates.getSelectedItem(), clauses);
 	add.setEnabled(true);
 	delete.setEnabled(false);
       }

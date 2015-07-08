@@ -17,15 +17,18 @@ import javax.swing.JPanel;
 public abstract class Vue extends JPanel implements Observer, ActionListener
 {
     protected Controleur c;
+    protected JFrame f;
     
     public Vue ( JFrame f )
     {
         super();
+        this.f = f;
         this.c = null;
     }
     public Vue ( Controleur c )
     {
         super();
+        this.f = null;
         this.c = c;
     }
        

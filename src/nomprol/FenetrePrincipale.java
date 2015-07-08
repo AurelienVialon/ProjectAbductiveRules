@@ -7,6 +7,7 @@ package nomprol;
 
 
 import ASP.ASPManager;
+import ILP.ILPManager;
 import Interfaces.ILPtoASP;
 import ProgolInterface.ProgolInterface;
 import java.awt.Color;
@@ -44,7 +45,8 @@ public class FenetrePrincipale extends JFrame
       public final JTabbedPane ILP_Part;
       public final JTabbedPane ASP_Part;
       
-      public final JComponent ILP_Engine;
+      public final ILPManager ILP_Manager;
+      public ProgolInterface ILP_Display;
       private final JPanel ILP_Results;
       public JList<String> ILP_Predicats_Results = null;
       public JTextArea ILP_Clauses_Results = null;
@@ -108,13 +110,12 @@ public class FenetrePrincipale extends JFrame
         
         this.fichierMenu.addSeparator();
  
-        this.ILP_Engine = new ProgolInterface(this);
-        this.ILP_Engine.setBackground(Color.white);
-        this.ILP_Part.add(this.ILP_Engine);
-                
-        ((ProgolInterface)this.ILP_Engine).loadSession("/home/aurelien/Bureau/Projet/famille.pl");
-        //((ProgolInterface)this.ILP_Engine).loadSession("/home/aurelien/Bureau/Progol/examples4.2/animals.pl");
-        //((ProgolInterface)this.ILP_Engine).loadSession("/home/aurelien/Bureau/Progol/examples4.2/chess.pl");
+        this.ILP_Manager = new ILPManager(this);
+        this.ILP_Manager.Init();
+        
+        this.ILP_Display = new ProgolInterface(this);
+        this.ILP_Display.setBackground(Color.white);
+        this.ILP_Part.add(this.ILP_Display);
         
         this.ILP_Results = new JPanel();
         this.ILP_Results.setName("Results");
@@ -181,12 +182,8 @@ public class FenetrePrincipale extends JFrame
 		      GridBagConstraints.NORTHEAST, 
 		      1.0, 1.0, 0, 10, 0, 10);
         
-        //Define the interface between ILP qnd ASP
-        ILPtoASP ilasp= new ILPtoASP(ASP_Manager);
-        
-        ((ProgolInterface)this.ILP_Engine).pm.setInterface(ilasp);
-                
-        
+        this.ILP_Manager.setInterface(ASP_Manager);
+                    
         this.ASP_Part.add(this.ASP_Content);
         this.ASP_Part.add(this.ASP_Results);       
         

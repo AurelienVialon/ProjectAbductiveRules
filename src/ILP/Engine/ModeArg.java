@@ -1,4 +1,4 @@
-package ProgolInterface;
+package ILP.Engine;
 
 import PrologParse.*;
 
@@ -13,7 +13,7 @@ public class ModeArg {
   /**
    * The input/output constants
    */
-  static int INPUT=0, OUTPUT=1, CONSTANT=2;
+  public static int INPUT=0, OUTPUT=1, CONSTANT=2;
   private static String[] ioString = {"+", "-", "#"};
   private String type;
   private int ioDirection;

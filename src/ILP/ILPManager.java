@@ -6,16 +6,13 @@
 package ILP;
 
 
+import ASP.ASPManager;
+import ILP.Engine.ILPEngine;
+import ILP.Engine.ILPMemory;
 import Interfaces.ILPtoASP;
 import MVC.Controleur;
 import MVC.Modele;
 import MVC.Vue;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JTextArea;
 import nomprol.FenetrePrincipale;
 
 /**
@@ -26,7 +23,6 @@ import nomprol.FenetrePrincipale;
 public class ILPManager extends Controleur
 { 
     private final FenetrePrincipale f;
-    public Predicats predicats;
     
     public ILPtoASP ilasp;
     
@@ -41,92 +37,18 @@ public class ILPManager extends Controleur
                ChangeResults(); 
             }
         });
-    }
-    
-    public void ParseResults( BufferedReader in, JTextArea output )
-    {
-        String memory = "";
-        String line = "";
-        String lineTemp = "";
         
-        predicats = new Predicats();
-    
-        for (;;) 
-        {
-            try 
-            {
-                line = in.readLine();
-                if (line == null) break;
-                output.append(line + "\n");
-                
-                if(line.contains("[Total number of clauses"))
-                {
-                    lineTemp = line.replace("[Total number of clauses =", "");
-                    
-                    lineTemp = lineTemp.substring(0, lineTemp.indexOf("]"));
-                    lineTemp = lineTemp.replaceAll(" ", "");
-                    
-                    int it = Integer.parseInt(lineTemp);
-                    
-                    int ind = memory.lastIndexOf("[Learning ") + "[Learning ".length(); 
-
-                    String token = "/";
-                                
-                    if(ind < "[Learning ".length())
-                    {
-                        ind = memory.lastIndexOf("[Generalising ") + "[Generalising ".length(); 
-                        token = "(";
-                    }
-                    
-                    String temp1 = memory.substring(ind);
-                    String nom_pred = temp1.substring(0, temp1.indexOf(token));
-                    
-                    ArrayList<String> ts = new ArrayList<>();
-                    
-                    for ( int i=0; i < it; i++ )
-                    {
-                      int index = temp1.lastIndexOf(nom_pred);  
-                      lineTemp = temp1.substring(index);
-                      temp1 = temp1.substring(0, index);
-                      lineTemp = lineTemp.replaceAll("\n", "");
-                      
-                      ts.add(lineTemp);                   
-                    }
-                    
-                    if(!ts.isEmpty())
-                    {
-                        for(int n=ts.size(); n > 0 ; n --)
-                        {
-                            this.predicats.add(nom_pred, ts.get(n - 1)); 
-                        }
-                    }
-                    
-                    line = in.readLine();//In order to remove the space line !
-                    	  output.append(line + "\n");
-                          
-                    line = in.readLine();
-                    	  output.append(line + "\n");
-                    memory = "";
-                } 
-                else
-                {
-                    memory = memory + line + "\n";                         
-                }
-            } 
-            catch (IOException ex) 
-            {
-                Logger.getLogger(ILPManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        this.initModele();
     }
+    
     public void UpdateResults()
     {
         this.f.resetIPLResults();
 
-        this.f.ILP_Predicats_Results.setListData(this.predicats.getTabPrefix());
+        this.f.ILP_Predicats_Results.setListData(((ILPEngine)this.m).predicats.getTabPrefix());
         this.f.ILP_Predicats_Results.setSelectedIndex(0);
         
-        String[] tab = this.predicats.getTabPredicat(this.f.ILP_Predicats_Results.getSelectedValue());
+        String[] tab = ((ILPEngine)this.m).getResult(this.f.ILP_Predicats_Results.getSelectedValue());
         
         this.f.ILP_Clauses_Results.setText("");
         
@@ -137,7 +59,7 @@ public class ILPManager extends Controleur
     }
     public void ChangeResults()
     {       
-        String[] tab = this.predicats.getTabPredicat(this.f.ILP_Predicats_Results.getSelectedValue());
+        String[] tab = ((ILPEngine)this.m).getResult(this.f.ILP_Predicats_Results.getSelectedValue());
         
         this.f.ILP_Clauses_Results.setText("");
         
@@ -147,25 +69,37 @@ public class ILPManager extends Controleur
         }
     }
     
+    public void Stop ()
+    {
+        ((ILPEngine)this.m).destroy();
+    }
+    
     @Override
     public String toString()
     {
-        return this.predicats.toString();
+        return ((ILPEngine)this.m).predicats.toString();
     }
 
     @Override
     protected Modele initModele() 
     {
-        return null;
+        return new ILPEngine();
     }
 
     @Override
     protected Vue initVue () 
     {
-        return null;
+        ProgolExecPanel l;
+        return new ProgolExecPanel ();
     }
-    public void setInterface (ILPtoASP i)
+    public void setInterface (ASPManager i)
     {
-        this.ilasp = i;
+        //Define the interface between ILP and ASP
+        this.ilasp = new ILPtoASP(i);
+    }
+    
+    public ILPMemory getILPMemory ()
+    {
+       return ((ILPEngine)this.m).getMemory();
     }
 }

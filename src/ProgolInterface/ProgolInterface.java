@@ -2,15 +2,13 @@ package ProgolInterface;
 
 
 
-import ILP.ILPManager;
+import ILP.Engine.ILPMemory;
 import java.awt.*;
 import java.io.*;
-import java.util.Enumeration;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import myawt.InfoDialog;
 import myawt.GridBag;
-import PrologParse.*;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -34,13 +32,8 @@ import nomprol.Onglet;
 public class ProgolInterface extends Onglet implements ActionListener 
 { 
   public FenetrePrincipale f;  
-  public ILPManager pm;
-    
-  public ModeList modes;
-  protected ClauseList options;
-  public ClauseList types;
-  public ClauseList clauses;
-
+  private ILPMemory mem;
+  
   private JMenu ilpMenu, helpmenu;
   private JMenuItem newSession, loadSession, saveSession;
   private JMenuItem help, about;
@@ -59,25 +52,7 @@ public class ProgolInterface extends Onglet implements ActionListener
   private GridBagLayout gridbag = new GridBagLayout();
 
   private int panel = 1;
-  
-  private String ProgolPath = "/home/aurelien/Bureau/Progol/source/progol";//"/usr/jc/bin/progol";
-  private String fileName;
-
-    public String getFileName() 
-    {
-        return fileName;
-    }
-  
-    public String getProgolPath() 
-    {
-        return ProgolPath;
-    }
-
-    public void setProgolPath(String progol_path) 
-    {
-        this.ProgolPath = progol_path;
-    }
-  
+    
   private static String[] labels = {"",
 				    "Type Definition",
 				    "Mode Definition",
@@ -89,6 +64,7 @@ public class ProgolInterface extends Onglet implements ActionListener
    * The constructor adds in the various section panels, and 
    * adds buttons to flip between them.  All the mode and clause
    * storage objects are initialised to be empty.
+     * @param f main frame of the JAVA program
    */
   public ProgolInterface(FenetrePrincipale f) 
   {
@@ -97,20 +73,15 @@ public class ProgolInterface extends Onglet implements ActionListener
     this.setName("Progol");
     
     this.f =f;
-    this.pm = new ILPManager(this.f);
-        
+    this.mem = f.ILP_Manager.getILPMemory();
+    
     this.setFont(new Font("Helvetica", Font.PLAIN, 12));
     this.setBackground(Color.white);
-    
-    modes = new ModeList();
-    types = new ClauseList();
-    options = new ClauseList();
-    clauses = new ClauseList();
 
-    typesPanel = new TypeSelectPanel(this);
-    modesPanel = new ModeSelectPanel(this);
-    clausePanel = new ClauseSelectPanel(this);
-    progolPanel = new ProgolExecPanel(this);
+    typesPanel = new TypeSelectPanel(this.f.ILP_Manager);
+    modesPanel = new ModeSelectPanel(this.f.ILP_Manager);
+    clausePanel = new ClauseSelectPanel(this.f);
+    progolPanel = new ProgolExecPanel(this.f);
 
     cardpanel = new JPanel();
     cardpanel.setBackground(Color.white);
@@ -176,46 +147,16 @@ public class ProgolInterface extends Onglet implements ActionListener
 	      1.0, 0.0, 10, 10, 10, 10);
   }
 
-    public ProgolExecPanel getProgolPanel() {
+    public ProgolExecPanel getProgolPanel() 
+    {
         return progolPanel;
-    }
-
-    public ModeList getModes() {
-        return modes;
-    }
-
-    public void setModes(ModeList modes) {
-        this.modes = modes;
-    }
-
-    public ClauseList getOptions() {
-        return options;
-    }
-
-    public void setOptions(ClauseList options) {
-        this.options = options;
-    }
-
-    public ClauseList getTypes() {
-        return types;
-    }
-
-    public void setTypes(ClauseList types) {
-        this.types = types;
-    }
-
-    public ClauseList getClauses() {
-        return clauses;
-    }
-
-    public void setClauses(ClauseList clauses) {
-        this.clauses = clauses;
     }
 
   /**
    * Update all the panels in this session.
    */
-  public final void updateAll() {
+  public final void updateAll() 
+  {
     typesPanel.update();
     modesPanel.update();
     clausePanel.update();
@@ -224,7 +165,8 @@ public class ProgolInterface extends Onglet implements ActionListener
   /**
    * Relabel the buttons
    */
-  private final void label() {
+  private final void label() 
+  {
     prev.setLabel("<<  " + labels[panel-1]);
     label.setText(labels[panel]);
     next.setLabel(labels[panel+1] + "  >>");
@@ -242,135 +184,6 @@ public class ProgolInterface extends Onglet implements ActionListener
       next.setEnabled(true);
     }
   }
-
-  /**
-   * Save the session in the given filename.
-   * The file is written in the following order:
-   * Options, 
-   * Modes,
-   * Types,
-   * Other Clauses (examples and background knowledge.).
-   * @param filename The file into which the session is written.
-   */
-  public final boolean saveSession(String filename) 
-  {
-    try {
-      Enumeration enume;
-      FileWriter ws = 
-	new FileWriter(filename);
-      enume = modes.elements();
-      while (enume.hasMoreElements()) 
-      {
-	ws.write(((Mode) enume.nextElement()).toString() + "\n");
-      }
-      enume = types.elements();
-      while (enume.hasMoreElements()) 
-      {
-	ws.write(((Clause) enume.nextElement()).toString() + "\n");
-      }
-      enume = clauses.elements();
-      while (enume.hasMoreElements()) 
-      {
-	ws.write(((Clause) enume.nextElement()).toString() + "\n");
-      }
-      enume = options.elements();
-      while (enume.hasMoreElements()) 
-      {
-	ws.write(((Clause) enume.nextElement()).toString() + "\n");
-      }
-      ws.close();
-    }
-    catch(IOException e) { System.out.println("Whoops: " + e.toString()); }
-
-    return true;
-  }
-
-  /**
-   * Load a session from the given filename.
-   * The file is first scanned for QUERY type clauses - i.e.
-   * modes and settings.  Then the file is scanned for types
-   * and general clauses, the distinction being made on the basis
-   * of the mode declarations (and other more obvious factors).
-   * @param filename The file from which the session is loaded.
-   */
-  public final boolean loadSession(String filename) 
-  {
-    this.newSession();
-    ClauseList file;
-    Clause c;
-    Mode m;
-    Term t;
-    Enumeration e1,e2,e3;
-    String s;
-    try {
-      BufferedReader rs = new BufferedReader(new FileReader(filename));
-      file = new PrologParser(rs);
-
-      e1 = file.elements();
-      while (e1.hasMoreElements()) {
-	c = (Clause) e1.nextElement();
-
-	if (c.punctuation() == Clause.QUERY) {
-	  e2 = c.body().elements();
-	  while (e2.hasMoreElements()) {
-	    t = (Term) e2.nextElement();
-	    s = " :- " + t.toString() + "?";
-	    if (t.symbol().equals("modeh/2") || t.symbol().equals("modeb/2")) {
-	      m = new Mode(new Clause(s));
-	      clauses.addDefinition(m.predicateSymbol());
-	      e3 = m.arguments().elements();
-	      while (e3.hasMoreElements()) {
-		String tp = ((ModeArg) e3.nextElement()).type();
-		if (!tp.equals("any") &&
-		    !tp.equals("int") && 
-		    !tp.equals("float")) {
-		  types.addDefinition(tp + "/1");
-		}
-	      }
-	      modes.addMode(m);
-	    }
-	    else {
-	      options.addElement(new Clause(s));
-	    }
-	  }			       
-	}
-      }
-
-      e1 = file.elements();
-      while (e1.hasMoreElements()) {
-	c = (Clause) e1.nextElement();
-
-	if (c.punctuation() == Clause.ASSERT) {
-	  if ((c.head().functionArity() == 1) && 
-	      !modes.hasModeFor(c.head().symbol()) &&
-	      c.body().size() ==0) {
-	    types.addElement(c);
-	  }
-	  else {
-	    clauses.addElement(c);
-	  }
-	}
-      }
-      rs.close();
-      this.fileName = filename;
-    }
-    catch(IOException e) { System.out.println("Whoops: " + e.toString()); }
-    updateAll();
-    return true;
-  } 
-
-   public void newSession()
-   {
-      panel = 1;
-      label();
-      this.f.ILP_Part.setSelectedComponent(this);
-      card.first(cardpanel);
-      modes.removeAll();
-      types.removeAll();
-      clauses.removeAll();
-      options.removeAll();
-      updateAll();
-   }
   /**
    * Event handling for buttons and menus.
      * @param event
@@ -392,9 +205,16 @@ public class ProgolInterface extends Onglet implements ActionListener
     }
     else if (event.getSource() == newSession) 
     {
-        this.newSession();
+      this.mem.Init();
+        
+      panel = 1;
+      label();
+      this.f.ILP_Part.setSelectedComponent(this);
+      card.first(cardpanel);
+      updateAll();
     }
-    else if (event.getSource() == loadSession) {
+    else if (event.getSource() == loadSession) 
+    {
       FileDialog fl = new FileDialog(this.f, "Load Session", FileDialog.LOAD);
       fl.pack();
       fl.setVisible(true);
@@ -402,8 +222,9 @@ public class ProgolInterface extends Onglet implements ActionListener
       String fd = fl.getDirectory();
       if (fn != null) {
 	File fi = new File(fd,fn);
-	if (fi.canRead()) {
-	  loadSession(fd+fn);
+	if (fi.canRead()) 
+        {
+	  this.mem.Load(fd+fn);
 	}
       }
       updateAll();
@@ -417,8 +238,9 @@ public class ProgolInterface extends Onglet implements ActionListener
       String fd = fs.getDirectory();
       if (fn != null) {
 	File fi = new File(fd,fn);
-	if (fi.canWrite()) {
-	  saveSession(fd+fn);
+	if (fi.canWrite()) 
+        {
+	  this.mem.Save(fd+fn);
 	}
       }
     }
@@ -435,21 +257,4 @@ public class ProgolInterface extends Onglet implements ActionListener
       info.setVisible(true);
     }
   }
-  
-  /**
-   * Create a new ProgolInterface and show it.
-   * A single command line parameter may be given, which should
-   * be a filename for a session (or prolog) file.
-   */  
-  /*public final static void main(String[] args) {
-    ProgolInterface session = new ProgolInterface("Progol Interface");
-    if (args.length == 1) {
-      File f = new File(args[0]);
-      if (f.canRead()) {
-	session.loadSession(args[0]);
-      }
-    }
-    session.pack();
-    session.setVisible(true);
-  }*/
 }

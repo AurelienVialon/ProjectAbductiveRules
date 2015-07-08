@@ -1,5 +1,9 @@
 package ProgolInterface;
 
+import ILP.Engine.ILPMemory;
+import ILP.Engine.ModeArg;
+import ILP.Engine.Mode;
+import ILP.ILPManager;
 import myawt.GridBag;
 import java.awt.*;
 import java.awt.event.*;
@@ -13,9 +17,9 @@ import java.util.*;
  * @see ProgolInterface
  */
 class ModeSelectPanel extends Panel 
-implements ActionListener, ItemListener {
-
-  private ProgolInterface session;
+implements ActionListener, ItemListener 
+{
+  private ILPMemory mem;
   private Mode currentmode;
   private java.awt.List modes, arguments;
   private TextField newmode, modetype;	
@@ -40,8 +44,9 @@ implements ActionListener, ItemListener {
    * in its various Lists.
    * @param session  The ProgolInterface session.
    */
-  public ModeSelectPanel(ProgolInterface session) {	
-    this.session = session;
+  public ModeSelectPanel(ILPManager man) 
+  {
+    this.mem = man.getILPMemory();
 
     currentmode = null;
 
@@ -200,7 +205,8 @@ implements ActionListener, ItemListener {
    * Ensures that the information displayed is the same as
    * the information stored in the ProgolInterface session.
    */
-  public final void update() {
+  public final void update() 
+  {
     modetype.setText("");
     newmode.setEditable(true);
     lpanel.setEnabled(true);
@@ -216,7 +222,7 @@ implements ActionListener, ItemListener {
     typechoice.addItem("int");
     typechoice.addItem("float");
     String s;
-    Enumeration e = session.types.definitions().keys(); 
+    Enumeration e = mem.getTypes().definitions().keys(); 
     while (e.hasMoreElements()) {
       s = (String) e.nextElement();
       s = s.substring(0,s.lastIndexOf("/"));
@@ -224,7 +230,7 @@ implements ActionListener, ItemListener {
     }
 
     modes.removeAll();
-    for (e = session.modes.elements();
+    for (e =mem.getModes().elements();
 	 e.hasMoreElements();
 	 modes.addItem(((Mode) e.nextElement()).predicateSymbol())) {}
   }
@@ -233,13 +239,14 @@ implements ActionListener, ItemListener {
   /**
    * Handle Button press events.
    */
-  public final void actionPerformed(ActionEvent event) {
+  public final void actionPerformed(ActionEvent event) 
+  {
     String arg;
     int md;
 
     if (event.getSource() == delmode) {
       if ((md = modes.getSelectedIndex()) != -1) {
-	session.modes.removeModeAt(md);
+	mem.getModes().removeModeAt(md);
 	modes.delItem(md);
 	modetype.setText("");
 	arguments.removeAll();
@@ -263,8 +270,8 @@ implements ActionListener, ItemListener {
 	  currentmode = new Mode(Mode.BODY, "*",
 				 pred, arity.getSelectedIndex());
 	}
-	session.modes.addMode(currentmode);
-	session.clauses.addDefinition(symbol);
+	mem.getModes().addMode(currentmode);
+	mem.getClauses().addDefinition(symbol);
 	newmode.setText("");
       }
       newmode.requestFocus();
@@ -294,7 +301,7 @@ implements ActionListener, ItemListener {
       }
       else if (selected == modes) {
 	currentmode = 
-	  ((Mode) session.modes.elementAt(selected.getSelectedIndex())); 
+	  ((Mode) mem.getModes().elementAt(selected.getSelectedIndex())); 
 	currentmode.listArgs(arguments);
 	modetype.setText(currentmode.modeType());
 	replacearg.setEnabled(false);

@@ -1,5 +1,7 @@
 package ProgolInterface;
 
+import ILP.Engine.ILPMemory;
+import ILP.ILPManager;
 import myawt.GridBag;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,7 +22,7 @@ import javax.swing.JTextField;
  */
 class TypeSelectPanel extends Panel implements ActionListener 
 {
-  private ProgolInterface session; 
+  private ILPMemory mem; 
   private JPanel lbtnpanel, rbtnpanel;
   private JPanel lpanel, rpanel;
   private JTextField newtype, newelt;
@@ -37,9 +39,9 @@ class TypeSelectPanel extends Panel implements ActionListener
    * in its various Lists.
    * @param session  The ProgolInterface session.
    */
-  public TypeSelectPanel(ProgolInterface session) 
+  public TypeSelectPanel(ILPManager man) 
   {
-    this.session = session;
+    this.mem = man.getILPMemory();
     
     types = new JList();
     types.setBorder(BorderFactory.createLineBorder(Color.gray));
@@ -164,7 +166,7 @@ class TypeSelectPanel extends Panel implements ActionListener
     s.add("int/1");
     s.add("float/1");
     
-    for (Enumeration e = session.types.definitions().keys();
+    for (Enumeration e = mem.getTypes().definitions().keys();
 	 e.hasMoreElements();
 	 s.add((String) e.nextElement())) {}
     
@@ -189,7 +191,7 @@ class TypeSelectPanel extends Panel implements ActionListener
       if (type.add((String)types.getSelectedValue()))
       {
 	elements.removeAll();
-	session.types.removeDefinition(type.firstElement());
+	mem.getTypes().removeDefinition(type.firstElement());
         this.update();
       } 
       newelt.setEditable(false);
@@ -201,7 +203,7 @@ class TypeSelectPanel extends Panel implements ActionListener
         elt.add((String)elements.getSelectedValue());
         type.clear();
 	type.add((String)types.getSelectedValue());
-	Enumeration e = session.types.definition(type.firstElement()).elements();
+	Enumeration e = mem.getTypes().definition(type.firstElement()).elements();
         
 	while (e.hasMoreElements()) 
         {
@@ -209,7 +211,7 @@ class TypeSelectPanel extends Panel implements ActionListener
 	  String s = ((Term) c.head().subterms().firstElement()).name();
 	  if (elt.firstElement().equals(s)) 
           {              
-	    session.types.removeElement(c);
+	    mem.getTypes().removeElement(c);
             break;
 	  }
 	}
@@ -226,7 +228,7 @@ class TypeSelectPanel extends Panel implements ActionListener
         {
           temp += "/1"; 
 	}       
-        session.types.addDefinition(temp);
+        mem.getTypes().addDefinition(temp);
         this.update();
         
 	newtype.setText("");
@@ -236,7 +238,7 @@ class TypeSelectPanel extends Panel implements ActionListener
     else if (event.getSource() == addelt || event.getSource() == newelt) 
     {
          Enumeration e = 
-	    session.types.
+	    mem.getTypes().
 	    definition((String)types.getSelectedValue()).elements();
 	  while (e.hasMoreElements()) 
           {
@@ -249,7 +251,7 @@ class TypeSelectPanel extends Panel implements ActionListener
         elements.setListData(elt);
 	String s = (String)types.getSelectedValue();
 	s = s.substring(0,s.lastIndexOf("/")) + "(" + newelt.getText() + ").";
-	session.types.addElement(new Clause(s));
+	mem.getTypes().addElement(new Clause(s));
 	newelt.setText("");
       }
       newelt.requestFocus();
@@ -263,7 +265,7 @@ class TypeSelectPanel extends Panel implements ActionListener
         {
 	  newelt.setEditable(true);
 	  Enumeration e = 
-	    session.types.
+	    mem.getTypes().
 	    definition((String)types.getSelectedValue()).elements();
           Vector<String> s = new Vector<>();
 	  while (e.hasMoreElements()) 

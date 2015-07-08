@@ -1,14 +1,15 @@
 package ProgolInterface;
 
 import ILP.ILPManager;
-import PrologParse.Clause;
+import MVC.Vue;
 import myawt.GridBag;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.ArrayList;
+import java.util.Observable;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import nomprol.FenetrePrincipale;
 
 /** 
  * A Panel to allow one to run a (native) Progol process.
@@ -18,14 +19,12 @@ import javax.swing.JTextArea;
  * Part of the Progol Interface package.
  * @author Rupert Parson
  * @version 2.0
- * @see ProgolInterface
  */
-class ProgolExecPanel extends Panel implements ActionListener 
+class ProgolExecPanel extends Vue 
 {
-  private final ProgolInterface session;
+  private final ILPManager manager;
   private final JTextArea output;
   private final Button run, stop, save, clear;
-  private Process pp;
   
   private final GridBagLayout gridbag = new GridBagLayout();
 
@@ -36,9 +35,10 @@ class ProgolExecPanel extends Panel implements ActionListener
    * in its various Lists.
    * @param session  The ProgolInterface session.
    */
-  public ProgolExecPanel(ProgolInterface session) 
+  public ProgolExecPanel(FenetrePrincipale fen) 
   {
-    this.session = session;
+    super(fen);
+    this.manager = ((FenetrePrincipale)this.f).ILP_Manager;
         
     this.output = new JTextArea("",24,80);
 
@@ -89,37 +89,8 @@ class ProgolExecPanel extends Panel implements ActionListener
 
   private int runSession()
   {
-    session.saveSession("tmppgli.pl");
-    Runtime now = Runtime.getRuntime();
-
-      try 
-      {
-	pp = now.exec(this.session.getProgolPath() + " tmppgli");
-           
-	InputStream s = pp.getInputStream();
-	BufferedReader in
-	  = new BufferedReader(new InputStreamReader(s));
-        
-        this.session.pm.ParseResults(in, output);
-        this.session.pm.UpdateResults();
-
-        ArrayList<String> temp = this.session.pm.predicats.getListPredicat();
-       
-        for ( String st : temp )
-            this.session.clauses.addElement(new Clause(st));
-        
-        String fileName = this.session.getFileName().replaceFirst(".pl", ".new.pl");
-        
-        this.session.saveSession(fileName);
-        this.session.pm.ilasp.givetoASP(fileName);
-        
-	return 1;
-      }
-      catch (IOException e) 
-      {
-	System.out.println("Oooups: " + e);
-	return 1;
-      }
+      this.manager.reprise();
+      return 1;
   }
 
   private void saveOutput(String filename) 
@@ -132,25 +103,28 @@ class ProgolExecPanel extends Panel implements ActionListener
     }
     catch(IOException e) 
     { 
-        System.out.println("Whoops: " + e.toString()); 
+        System.out.println("Error : " + e.toString()); 
     }
   }
   
   /**
    * Handle Button press events.
    */
-  public final void actionPerformed(ActionEvent event) {
-    if (event.getSource() == run) {
+  public final void actionPerformed(ActionEvent event) 
+  {
+    if (event.getSource() == run) 
+    {
       int exitvalue = runSession();
     }
-	else if (event.getSource() == stop) {
-	  pp.destroy();
+	else if (event.getSource() == stop) 
+        {
+	  this.manager.Stop();
 	}
     else if (event.getSource() == clear) {
       output.setText("");
     }
     else if (event.getSource() == save) {
-      FileDialog fs = new FileDialog(session.f, "Save Output", FileDialog.SAVE);
+      FileDialog fs = new FileDialog(f, "Save Output", FileDialog.SAVE);
       fs.pack();
       fs.show();
       String fn = fs.getFile();
@@ -161,4 +135,9 @@ class ProgolExecPanel extends Panel implements ActionListener
       }
     }
   }
+
+    @Override
+    public void update(Observable o, Object ob) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -1,4 +1,4 @@
-package ProgolInterface;
+package ILP.Engine;
 
 import java.util.*;
 import PrologParse.*;
@@ -16,11 +16,11 @@ public class Mode {
   /**
    * A head mode.
    */
-  static final int HEAD = 0;
+  public static final int HEAD = 0;
   /**
    * A body mode.
    */
-  static final int BODY = 1;
+  public static final int BODY = 1;
 
   private static String[] typeCode   = {"modeh", "modeb"};
   private static String[] typeString = {"head", "body"};

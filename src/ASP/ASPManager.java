@@ -27,8 +27,7 @@ public class ASPManager extends Controleur
     @Override
     protected Modele initModele() 
     {
-        this.m = new ASP.ASPEngine("/home/aurelien/Bureau/DLV/dlv");
-        return m;
+        return new ASP.ASPEngine("/home/aurelien/Bureau/DLV/dlv");
     }
 
     @Override

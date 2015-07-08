@@ -7,8 +7,8 @@ package Interfaces;
 
 import ASP.ASPManager;
 import MVC.Modele;
-import ProgolInterface.Mode;
-import ProgolInterface.ModeArg;
+import ILP.Engine.Mode;
+import ILP.Engine.ModeArg;
 import PrologParse.Clause;
 import PrologParse.PrologParser;
 import PrologParse.Term;
