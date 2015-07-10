@@ -8,7 +8,6 @@ package nomprol;
 
 import ASP.ASPManager;
 import ILP.ILPManager;
-import Interfaces.ILPtoASP;
 import ProgolInterface.ProgolInterface;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
