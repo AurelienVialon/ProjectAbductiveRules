@@ -27,11 +27,13 @@ public class ILPEngine extends Modele
     public ILPManager pm;
     //
     
+    //The predicats variable will contain all the new predicats of the Inductive search !
     public Predicats predicats;
     
     private Process pp;
     protected ILPMemory mem;
     
+    //TODO : allow changement of the ILPEnginePath by the User !
     private String ILPEnginePath = "/home/aurelien/Bureau/Progol/source/progol";//"/usr/jc/bin/progol";
     protected String output = "";
     

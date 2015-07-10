@@ -16,7 +16,7 @@ public abstract class MetaModele extends Modele
     public MetaModele()
     {
         super();
-        lm = new ArrayList<Modele>();
+        lm = new ArrayList<>();
     }
 
     @Override

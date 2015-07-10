@@ -25,15 +25,16 @@ public abstract class Controleur
         
         m.ajouter_lien(v);
         
-        Thread t = new Thread(m);
-        t.start();
-        
         return v;
     }
     
-    public void reprise ()
+    public void Reprise ()
     {
         this.m.retour();
+    }
+    public void Fonctionnement ()
+    {
+        this.m.Lancement();
     }
     
     protected abstract Modele initModele();    

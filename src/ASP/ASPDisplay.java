@@ -106,7 +106,7 @@ public class ASPDisplay extends Vue
         }
         else if(e.getSource() == this.runB)
         {
-            this.c.reprise();
+            this.c.Fonctionnement();
         }
     }
 }

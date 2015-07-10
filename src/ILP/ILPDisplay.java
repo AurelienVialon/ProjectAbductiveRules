@@ -88,7 +88,7 @@ class ILPDisplay extends Vue
 
   private int runSession()
   {
-      this.manager.reprise();
+      this.manager.Fonctionnement();
       return 1;
   }
 
