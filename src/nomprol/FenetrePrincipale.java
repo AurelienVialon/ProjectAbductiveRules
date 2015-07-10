@@ -44,8 +44,9 @@ public class FenetrePrincipale extends JFrame
       public final JTabbedPane ILP_Part;
       public final JTabbedPane ASP_Part;
       
-      public final ILPManager ILP_Manager;
+      public ILPManager ILP_Manager;
       public ILPDisplay Exec_Display;
+      
       public ProgolInterface ILP_Display;
       private final JPanel ILP_Results;
       public JList<String> ILP_Predicats_Results = null;

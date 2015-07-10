@@ -19,7 +19,7 @@ import nomprol.FenetrePrincipale;
  * @author Rupert Parson
  * @version 2.0
  */
-class ILPDisplay extends Vue 
+public class ILPDisplay extends Vue 
 {
   private final ILPManager manager;
   private final JTextArea output;
