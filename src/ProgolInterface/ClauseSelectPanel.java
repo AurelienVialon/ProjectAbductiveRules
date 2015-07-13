@@ -1,9 +1,6 @@
 package ProgolInterface;
 
-import IA.Agent;
 import ILP.Engine.ILPMemory;
-import ILP.Communications.Lexique;
-import MVC.communications.Update;
 import myawt.GridBag;
 import PrologParse.*;
 import java.awt.*;
@@ -20,9 +17,10 @@ import nomprol.FenetrePrincipale;
  * @version 2.0
  * @see ProgolInterface
  */
-class ClauseSelectPanel extends JPanel implements Observer, ActionListener, ItemListener 
+class ClauseSelectPanel extends JPanel implements ActionListener, ItemListener 
 {
   private FenetrePrincipale f;
+  private ILPMemory mem;
 
   private final java.awt.List predicates, clauses;
   private final JButton add, delete, manual;
@@ -37,10 +35,10 @@ class ClauseSelectPanel extends JPanel implements Observer, ActionListener, Item
    * in its various Lists.
    * @param session  The ProgolInterface session.
    */
-  public ClauseSelectPanel(FenetrePrincipale fen, Agent ag) 
+  public ClauseSelectPanel(FenetrePrincipale fen) 
   {
     this.f = fen;
-    ag.addObserver(this);
+    this.mem = f.ILP_Manager.getMemory();
     
     this.setBackground(Color.white);
     
@@ -88,30 +86,40 @@ class ClauseSelectPanel extends JPanel implements Observer, ActionListener, Item
 		      GridBagConstraints.HORIZONTAL,
 		      GridBagConstraints.NORTHWEST, 
 		      1.0, 0.0, 10, 10, 10, 10);
+    
+    this.update();
   }
 
     
-  @Override
-  public void update(Observable o, Object arg) 
-  {
+ /**
+
+   * Update the Panel.
+
+   * Ensures that the information displayed is the same as
+
+   * the information stored in the ProgolInterface session.
+
+   */
+
+  public final void update() {
+
     add.setEnabled(false);
+
     delete.setEnabled(false);
+
     predicates.removeAll();
+
+
     clauses.removeAll();
-    if( arg instanceof Update)
-    {
-        Update up = (Update)arg;
-        
-        if(up.motif.contains(Lexique.CLAUSES))
-        {
-           ClauseList cl = ((ILPMemory)up.o).getClauses();
-              
-            for (Enumeration e = cl.definitions().keys();
-            e.hasMoreElements();
-            predicates.add((String) e.nextElement())) {}
-        }
-    }
+
+    for (Enumeration e = mem.getClauses().definitions().keys();
+
+	 e.hasMoreElements();
+
+	 predicates.addItem((String) e.nextElement())) {}
+
   }
+
  
 
   /**
@@ -124,7 +132,7 @@ class ClauseSelectPanel extends JPanel implements Observer, ActionListener, Item
       String s;
       if (event.getSource() == manual) { s = ""; }
       else { s = predicates.getSelectedItem(); }
-      ClauseDefineDialog cdd = new ClauseDefineDialog(f, s);
+      ClauseDefineDialog cdd = new ClauseDefineDialog(f, s, this.mem);
       cdd.setVisible(true);;
       if (!cdd.cancelled()) {
 	String cl = cdd.getClause();

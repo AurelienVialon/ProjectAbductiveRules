@@ -4,10 +4,6 @@
  */
 package MVC;
 
-import MVC.communications.Communication;
-import MVC.communications.Message;
-import MVC.communications.*;
-
 /**
  *
  * @author Aurélien Vialon
@@ -39,11 +35,7 @@ public abstract class Controleur
     {
         this.m.Lancement();
     }
-    public void PasseMessage(Message msg)
-    {
-        MVC.communications.Communication(msg.destinataire(this.m));
-    }
-    
+
     protected abstract Modele initModele();    
     protected abstract Vue initVue( ); 
 }

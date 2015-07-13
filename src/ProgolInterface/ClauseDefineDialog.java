@@ -27,6 +27,8 @@ import nomprol.FenetrePrincipale;
 class ClauseDefineDialog extends Dialog implements ActionListener 
 {
   private FenetrePrincipale f;
+  private ILPMemory mem; 
+  
   private Button okay, cancel;
   private Checkbox positive, negative;
   private CheckboxGroup cbg;
@@ -44,11 +46,12 @@ class ClauseDefineDialog extends Dialog implements ActionListener
    * @param session The Progol Interface session.
    * @param symbol The predicate symbol of the clause to be defined.
    */
-  public ClauseDefineDialog(FenetrePrincipale f,  String symbol) 
+  public ClauseDefineDialog(FenetrePrincipale f,  String symbol, ILPMemory m) 
   {
     super((JFrame) f, true);
 
     this.f = f;
+    this.mem = m;
     
     this.setLocation(new Point(f.getLocation().x+150,
 			       f.getLocation().y+200));

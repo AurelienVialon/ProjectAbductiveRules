@@ -5,7 +5,6 @@
  */
 package ILP.Engine;
 
-import IA.Agent;
 import ILP.ILPManager;
 import MVC.Modele;
 import MVC.communications.Message;
@@ -21,10 +20,10 @@ import java.util.logging.Logger;
  *
  * @author Aurélien Vialon
  */
-public class ILPEngine extends Agent
+public class ILPEngine extends Modele
 {   
     private Process pp;
-    protected ILPMemory mem;
+    public ILPMemory mem;
     
     //TODO : allow changement of the ILPEnginePath by the User !
     private String ILPEnginePath = "/home/aurelien/Bureau/Progol/source/progol";//"/usr/jc/bin/progol";
@@ -32,7 +31,6 @@ public class ILPEngine extends Agent
     
     public ILPEngine ()
     {
-        super();
         this.mem = new ILPMemory ();
     }
     
@@ -70,10 +68,6 @@ public class ILPEngine extends Agent
       {
         while(true)
         {
-            if(!this.boite_a_messages.empty())
-            {
-                
-            }
             mem.Save("tmppgli.pl");
             Runtime now = Runtime.getRuntime();
             
@@ -182,5 +176,11 @@ public class ILPEngine extends Agent
                 Logger.getLogger(ILPManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    @Override
+    protected void Maj(Object o, Message m) 
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

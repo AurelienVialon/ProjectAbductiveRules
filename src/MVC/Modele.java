@@ -4,6 +4,7 @@
  */
 package MVC;
 
+import MVC.communications.Message;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -115,7 +116,8 @@ public abstract class Modele extends Observable implements Runnable
     public abstract void Reinit();
     
     // Pour les demandes de mise à jour.
-    protected abstract void Maj ();
+    protected abstract void Maj ();   
+    protected abstract void Maj (Object o, Message m);
     
     public void ChangeContinuer (boolean b) { continuer = b; }
     public void ChangePause (boolean b) { en_pause = b; }

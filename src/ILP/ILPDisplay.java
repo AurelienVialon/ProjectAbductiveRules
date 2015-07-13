@@ -13,19 +13,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import nomprol.FenetrePrincipale;
 
-/** 
- * A Panel to allow one to run a (native) Progol process.
- * The process is run on the contents of the current 
- * ProgolInterface session.
- * One can view, edit, and save the output.
- * Part of the Progol Interface package.
- * @author Rupert Parson
- * @version 2.0
- */
 public class ILPDisplay extends Vue 
 {
   private final ILPManager manager;
-  private final JTextArea output;
+  private JTextArea output;
   private final Button run, stop, save, clear;
   
   private ILPMemory mem;
@@ -189,6 +180,7 @@ public class ILPDisplay extends Vue
             
             this.mem = (ILPMemory)msg.o;
             
+            this.output.append("/n" + msg.s);
             this.UpdateResults();
         }
     }

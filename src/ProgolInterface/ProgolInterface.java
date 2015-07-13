@@ -1,6 +1,7 @@
 package ProgolInterface;
 
 
+import ILP.Engine.ILPMemory;
 import java.awt.*;
 import java.io.*;
 import java.awt.event.ActionListener;
@@ -30,6 +31,7 @@ import nomprol.Onglet;
 public class ProgolInterface extends Onglet implements ActionListener 
 { 
   public FenetrePrincipale f;  
+  private ILPMemory mem;
   
   private JMenu ilpMenu, helpmenu;
   private JMenuItem newSession, loadSession, saveSession;
@@ -69,13 +71,14 @@ public class ProgolInterface extends Onglet implements ActionListener
     this.setName("Progol");
     
     this.f =f;
+    this.mem = f.ILP_Manager.getMemory();
     
     this.setFont(new Font("Helvetica", Font.PLAIN, 12));
     this.setBackground(Color.white);
 
-    typesPanel = new TypeSelectPanel();
-    modesPanel = new ModeSelectPanel();
-    clausePanel = new ClauseSelectPanel();
+    typesPanel = new TypeSelectPanel(f.ILP_Manager.getMemory());
+    modesPanel = new ModeSelectPanel(f.ILP_Manager.getMemory());
+    clausePanel = new ClauseSelectPanel(f);
 
     cardpanel = new JPanel();
     cardpanel.setBackground(Color.white);
@@ -140,6 +143,17 @@ public class ProgolInterface extends Onglet implements ActionListener
 	      GridBagConstraints.CENTER,
 	      1.0, 0.0, 10, 10, 10, 10);
   }
+  
+  /**
+     * Update all the panels in this session.
+   */
+  public final void updateAll() 
+  {
+    typesPanel.update();
+    modesPanel.update();
+    clausePanel.update();
+  }
+  
   /**
    * Relabel the buttons
    */

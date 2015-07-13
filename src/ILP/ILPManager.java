@@ -8,6 +8,7 @@ package ILP;
 
 import ASP.ASPManager;
 import ILP.Engine.ILPEngine;
+import ILP.Engine.ILPMemory;
 import Interfaces.ILPtoASP;
 import MVC.Controleur;
 import MVC.Modele;
@@ -38,7 +39,8 @@ public class ILPManager extends Controleur
     @Override
     protected Modele initModele() 
     {
-        return new ILPEngine();
+        ILPEngine e = new ILPEngine();
+        return e;
     }
 
     @Override
@@ -50,5 +52,9 @@ public class ILPManager extends Controleur
     {
         //Define the interface between ILP and ASP
         this.ilasp = new ILPtoASP(i);
+    }
+    public ILPMemory getMemory ()
+    {
+        return ((ILPEngine)this.m).mem;
     }
 }

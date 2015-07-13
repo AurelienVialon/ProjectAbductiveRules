@@ -5,8 +5,8 @@
  */
 package ASP;
 
-import IA.Agent;
 import ILP.ILPManager;
+import MVC.Modele;
 import MVC.communications.Message;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author Aurélien Vialon
  */
-public class ASPEngine extends Agent
+public class ASPEngine extends Modele
 {
     private Process p;
     
@@ -150,5 +150,10 @@ public class ASPEngine extends Agent
     protected void Maj() 
     {
         this.notifie(m);
+    }
+
+    @Override
+    protected void Maj(Object o, Message m) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
