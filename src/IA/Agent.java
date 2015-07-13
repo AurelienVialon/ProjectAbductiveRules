@@ -4,13 +4,6 @@ package IA;
 import MVC.Modele;
 import MVC.communications.Message;
 import java.util.Stack;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
  * @author Aurélien Vialon
@@ -39,11 +32,11 @@ public abstract class Agent extends Modele
         this.id = i;
         this.nom = n;
     }
-    protected Message dernier_message ()
+    protected Message prendre_dernier_message ()
     {
         return this.boite_a_messages.pop();
     }
-    public void Depose_message (Message m)
+    public void depose_message (Message m)
     {
         this.boite_a_messages.push(m);
     }

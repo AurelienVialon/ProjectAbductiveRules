@@ -22,11 +22,7 @@ import java.util.logging.Logger;
  * @author Aurélien Vialon
  */
 public class ILPEngine extends Agent
-{
-    //Faudra sortir le manager de là après !!!!!
-    public ILPManager pm;
-    //
-    
+{   
     private Process pp;
     protected ILPMemory mem;
     
@@ -74,6 +70,10 @@ public class ILPEngine extends Agent
       {
         while(true)
         {
+            if(!this.boite_a_messages.empty())
+            {
+                
+            }
             mem.Save("tmppgli.pl");
             Runtime now = Runtime.getRuntime();
             

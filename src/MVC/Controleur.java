@@ -3,6 +3,11 @@
  * and open the template in the editor.
  */
 package MVC;
+
+import MVC.communications.Communication;
+import MVC.communications.Message;
+import MVC.communications.*;
+
 /**
  *
  * @author Aurélien Vialon
@@ -14,9 +19,7 @@ public abstract class Controleur
     public Controleur()
     {
         super();
-    }
-    
-      
+    }     
     //Méthodes d'initialisation des modèles et vue.
     public Vue Init ( )
     {
@@ -35,6 +38,10 @@ public abstract class Controleur
     public void Fonctionnement ()
     {
         this.m.Lancement();
+    }
+    public void PasseMessage(Message msg)
+    {
+        MVC.communications.Communication(msg.destinataire(this.m));
     }
     
     protected abstract Modele initModele();    

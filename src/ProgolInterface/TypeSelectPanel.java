@@ -3,7 +3,7 @@ package ProgolInterface;
 import IA.Agent;
 import ILP.Engine.ILPMemory;
 import ILP.ILPManager;
-import MVC.communications.Lexique;
+import ILP.Communications.Lexique;
 import MVC.communications.Update;
 import myawt.GridBag;
 import java.awt.*;

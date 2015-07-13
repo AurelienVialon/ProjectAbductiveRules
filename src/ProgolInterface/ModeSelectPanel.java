@@ -6,7 +6,7 @@ import ILP.Engine.ModeArg;
 import ILP.Engine.Mode;
 import ILP.Engine.ModeList;
 import ILP.ILPManager;
-import MVC.communications.Lexique;
+import ILP.Communications.Lexique;
 import MVC.communications.Update;
 import PrologParse.ClauseList;
 import myawt.GridBag;

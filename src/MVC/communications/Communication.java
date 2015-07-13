@@ -6,9 +6,6 @@
 package MVC.communications;
 
 import IA.Agent;
-import MVC.Modele;
-import MVC.Vue;
-
 /**
  *
  * @author Aurélien Vialon
@@ -23,7 +20,7 @@ public class Communication
     {
         if(msg.destinataire instanceof Agent)
         {
-            
+            ((Agent)msg.destinataire).depose_message(msg);
         }
     }
 }

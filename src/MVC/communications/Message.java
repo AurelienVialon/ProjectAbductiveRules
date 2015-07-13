@@ -68,7 +68,13 @@ public class Message
         this.temps_creation = System.nanoTime();       
         System.out.println("Temps de création du message : " + this.temps_creation);
     }
-        
+    
+    public Message destinataire(Object dst)
+    {
+        this.destinataire = dst;
+        return this;
+    }
+    
     public String code() 
     {
         return s;

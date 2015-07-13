@@ -2,7 +2,7 @@ package ProgolInterface;
 
 import IA.Agent;
 import ILP.Engine.ILPMemory;
-import MVC.communications.Lexique;
+import ILP.Communications.Lexique;
 import MVC.communications.Update;
 import myawt.GridBag;
 import PrologParse.*;
@@ -129,12 +129,21 @@ class ClauseSelectPanel extends JPanel implements Observer, ActionListener, Item
       if (!cdd.cancelled()) {
 	String cl = cdd.getClause();
 	Clause cls = new Clause(cl);
+        
+       
 	mem.getClauses().addElement(cls);
-	if (event.getSource() == manual) { update(); }
-	else { clauses.addItem(cl);}
+	if (event.getSource() == manual) 
+        { 
+            update(); 
+        }
+	else 
+        { 
+            clauses.addItem(cl);
+        }
       }
     }
-    else if (event.getSource() == delete) {
+    else if (event.getSource() == delete) 
+    {
       int pos = clauses.getSelectedIndex();
       mem.getClauses().removeDefinitionAt(predicates.getSelectedItem(), pos);
       clauses.delItem(pos);

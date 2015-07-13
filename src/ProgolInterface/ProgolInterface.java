@@ -1,7 +1,6 @@
 package ProgolInterface;
 
 
-import ILP.Engine.ILPMemory;
 import java.awt.*;
 import java.io.*;
 import java.awt.event.ActionListener;
@@ -31,7 +30,6 @@ import nomprol.Onglet;
 public class ProgolInterface extends Onglet implements ActionListener 
 { 
   public FenetrePrincipale f;  
-  public ILPMemory mem;
   
   private JMenu ilpMenu, helpmenu;
   private JMenuItem newSession, loadSession, saveSession;
@@ -75,9 +73,9 @@ public class ProgolInterface extends Onglet implements ActionListener
     this.setFont(new Font("Helvetica", Font.PLAIN, 12));
     this.setBackground(Color.white);
 
-    typesPanel = new TypeSelectPanel(this.f.ILP_Manager);
-    modesPanel = new ModeSelectPanel(this.f.ILP_Manager);
-    clausePanel = new ClauseSelectPanel(this.f);
+    typesPanel = new TypeSelectPanel();
+    modesPanel = new ModeSelectPanel();
+    clausePanel = new ClauseSelectPanel();
 
     cardpanel = new JPanel();
     cardpanel.setBackground(Color.white);
