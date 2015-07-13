@@ -1,7 +1,10 @@
 package ProgolInterface;
 
+import IA.Agent;
 import ILP.Engine.ILPMemory;
 import ILP.ILPManager;
+import MVC.communications.Lexique;
+import MVC.communications.Update;
 import myawt.GridBag;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,9 +23,8 @@ import javax.swing.JTextField;
  * @version 2.0
  * @see ProgolInterface
  */
-class TypeSelectPanel extends Panel implements ActionListener 
+class TypeSelectPanel extends Panel implements Observer, ActionListener 
 {
-  private ILPMemory mem; 
   private JPanel lbtnpanel, rbtnpanel;
   private JPanel lpanel, rpanel;
   private JTextField newtype, newelt;
@@ -39,10 +41,9 @@ class TypeSelectPanel extends Panel implements ActionListener
    * in its various Lists.
    * @param session  The ProgolInterface session.
    */
-  public TypeSelectPanel(ILPManager man) 
+  public TypeSelectPanel(Agent ag) 
   {
-    this.mem = man.getILPMemory();
-    
+    ag.addObserver(this);
     types = new JList();
     types.setBorder(BorderFactory.createLineBorder(Color.gray));
     types.addMouseListener(new java.awt.event.MouseAdapter()
@@ -142,19 +143,13 @@ class TypeSelectPanel extends Panel implements ActionListener
 		      GridBagConstraints.BOTH,
 		      GridBagConstraints.NORTHEAST, 
 		      1.0, 1.0, 0, 10, 0, 10); 
-
-    this.update();
   }
 
 
-  /**
-   * Update the Panel.
-   * Ensures that the information displayed is the same as
-   * the information stored in the ProgolInterface session.
-   */
-  public final void update() 
+  @Override
+  public void update(Observable o, Object arg) 
   {
-    newtype.setText("");
+     newtype.setText("");
     newelt.setText("");
     newelt.setEditable(false);
     newtype.setEditable(true);
@@ -166,15 +161,25 @@ class TypeSelectPanel extends Panel implements ActionListener
     s.add("int/1");
     s.add("float/1");
     
-    for (Enumeration e = mem.getTypes().definitions().keys();
-	 e.hasMoreElements();
-	 s.add((String) e.nextElement())) {}
-    
-    types.setListData(s);
-    
-    this.ChangementElement();
-  }
+    if (arg instanceof Update)
+    {
+        Update up = (Update)arg;
 
+        if(up.motif.contains(Lexique.TYPES))
+        {
+            ClauseList cl = ((ILPMemory)up.o).getTypes();
+    
+             for (Enumeration e = cl.definitions().keys();
+                e.hasMoreElements();
+                s.add((String) e.nextElement())) {}
+    
+            types.setListData(s);
+    
+            this.ChangementElement();
+        }
+    }
+  }
+ 
   /**
    * Handle Button press events.
    */
@@ -192,7 +197,6 @@ class TypeSelectPanel extends Panel implements ActionListener
       {
 	elements.removeAll();
 	mem.getTypes().removeDefinition(type.firstElement());
-        this.update();
       } 
       newelt.setEditable(false);
     }

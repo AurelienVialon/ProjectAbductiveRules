@@ -5,8 +5,8 @@
  */
 package ASP;
 
+import IA.Agent;
 import ILP.ILPManager;
-import MVC.Modele;
 import MVC.communications.Message;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author Aurélien Vialon
  */
-public class ASPEngine extends Modele
+public class ASPEngine extends Agent
 {
     private Process p;
     

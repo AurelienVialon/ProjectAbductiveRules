@@ -5,6 +5,7 @@
  */
 package ILP.Engine;
 
+import ILP.Predicats;
 import PrologParse.Clause;
 import PrologParse.ClauseList;
 import PrologParse.PrologParser;
@@ -28,13 +29,17 @@ public class ILPMemory
   
   protected String fileName;
   
+      
+   //The predicats variable will contain all the new predicats of the Inductive search !
+   public Predicats predicats;
+  
   public ILPMemory ()
   {
     modes = new ModeList();
     types = new ClauseList();
     options = new ClauseList();
     clauses = new ClauseList();
-    
+    predicats = new Predicats();
                     
         this.Load("/home/aurelien/Bureau/Projet/famille.pl");
         //this.Load("/home/aurelien/Bureau/Progol/examples4.2/animals.pl");
@@ -83,6 +88,10 @@ public class ILPMemory
     public synchronized void setClauses(ClauseList clauses) 
     {
         this.clauses = clauses;
+    }
+    public String [] getResult (String value)
+    {
+        return this.predicats.getTabPredicat(value);
     }
      /**
    * Save the session in the given filename.
@@ -205,13 +214,14 @@ public class ILPMemory
     }
     return true;
   } 
-
+      
    public void Init()
    {
       modes.removeAll();
       types.removeAll();
       clauses.removeAll();
       options.removeAll();
+      predicats.clear();
    }
    public synchronized void Reinit()
    {

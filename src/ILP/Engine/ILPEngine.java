@@ -5,10 +5,10 @@
  */
 package ILP.Engine;
 
+import IA.Agent;
 import ILP.ILPManager;
-import ILP.Predicats;
 import MVC.Modele;
-import PrologParse.Clause;
+import MVC.communications.Message;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,14 +21,11 @@ import java.util.logging.Logger;
  *
  * @author Aurélien Vialon
  */
-public class ILPEngine extends Modele
+public class ILPEngine extends Agent
 {
     //Faudra sortir le manager de là après !!!!!
     public ILPManager pm;
     //
-    
-    //The predicats variable will contain all the new predicats of the Inductive search !
-    public Predicats predicats;
     
     private Process pp;
     protected ILPMemory mem;
@@ -66,21 +63,20 @@ public class ILPEngine extends Modele
     
     @Override
     protected void Maj() 
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    {      
+        this.notifie(new Message(output, this.mem));
     }
-   
      
     @Override
     public void run() 
     {
-      mem.Save("tmppgli.pl");
-      Runtime now = Runtime.getRuntime();
-
       try 
       {
         while(true)
         {
+            mem.Save("tmppgli.pl");
+            Runtime now = Runtime.getRuntime();
+            
             pp = now.exec(this.getILPEnginePath() + " tmppgli");
            
             InputStream s = pp.getInputStream();
@@ -92,17 +88,17 @@ public class ILPEngine extends Modele
             //TODO !!!!!
             //this.mem.pm.UpdateResults();
 
-            ArrayList<String> temp = this.predicats.getListPredicat();
+            /*ArrayList<String> temp = this.predicats.getListPredicat();
        
             for ( String st : temp )
-                this.mem.clauses.addElement(new Clause(st));
+                this.mem.clauses.addElement(new Clause(st));*/
         
             String fileName = this.mem.getFileName().replaceFirst(".pl", ".new.pl");
         
             this.mem.Save(fileName);
            
             //this.mem.pm.ilasp.givetoASP(fileName);    
-            
+            this.Maj();
             this.pause();
         }
       }
@@ -117,7 +113,7 @@ public class ILPEngine extends Modele
         String line = "";
         String lineTemp = "";
         
-        predicats = new Predicats();
+        this.mem.predicats.clear();
     
         for (;;) 
         {
@@ -165,7 +161,7 @@ public class ILPEngine extends Modele
                     {
                         for(int n=ts.size(); n > 0 ; n --)
                         {
-                            this.predicats.add(nom_pred, ts.get(n - 1)); 
+                            this.mem.predicats.add(nom_pred, ts.get(n - 1)); 
                         }
                     }
                     
@@ -186,15 +182,5 @@ public class ILPEngine extends Modele
                 Logger.getLogger(ILPManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }
-    
-    public String [] getResult (String value)
-    {
-        return this.predicats.getTabPredicat(value);
-    }
-    
-    public synchronized ILPMemory getMemory ()
-    {
-        return this.mem;
     }
 }

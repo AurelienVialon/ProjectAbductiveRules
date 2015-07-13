@@ -1,9 +1,14 @@
 package ProgolInterface;
 
+import IA.Agent;
 import ILP.Engine.ILPMemory;
 import ILP.Engine.ModeArg;
 import ILP.Engine.Mode;
+import ILP.Engine.ModeList;
 import ILP.ILPManager;
+import MVC.communications.Lexique;
+import MVC.communications.Update;
+import PrologParse.ClauseList;
 import myawt.GridBag;
 import java.awt.*;
 import java.awt.event.*;
@@ -17,9 +22,8 @@ import java.util.*;
  * @see ProgolInterface
  */
 class ModeSelectPanel extends Panel 
-implements ActionListener, ItemListener 
+implements Observer, ActionListener, ItemListener 
 {
-  private ILPMemory mem;
   private Mode currentmode;
   private java.awt.List modes, arguments;
   private TextField newmode, modetype;	
@@ -44,10 +48,9 @@ implements ActionListener, ItemListener
    * in its various Lists.
    * @param session  The ProgolInterface session.
    */
-  public ModeSelectPanel(ILPManager man) 
+  public ModeSelectPanel(Agent ag) 
   {
-    this.mem = man.getILPMemory();
-
+    ag.addObserver(this);
     currentmode = null;
 
     newmode = new TextField(15);
@@ -195,19 +198,13 @@ implements ActionListener, ItemListener
 		      GridBagConstraints.BOTH,
 		      GridBagConstraints.NORTHEAST, 
 		      1.0, 1.0, 0, 10, 0, 10); 
-
-    this.update();
   }
      
 
-  /**
-   * Update the Panel.
-   * Ensures that the information displayed is the same as
-   * the information stored in the ProgolInterface session.
-   */
-  public final void update() 
+  @Override
+  public void update(Observable o, Object arg) 
   {
-    modetype.setText("");
+   modetype.setText("");
     newmode.setEditable(true);
     lpanel.setEnabled(true);
     lbtnpanel.setEnabled(true);
@@ -222,17 +219,33 @@ implements ActionListener, ItemListener
     typechoice.addItem("int");
     typechoice.addItem("float");
     String s;
-    Enumeration e = mem.getTypes().definitions().keys(); 
-    while (e.hasMoreElements()) {
-      s = (String) e.nextElement();
-      s = s.substring(0,s.lastIndexOf("/"));
-      typechoice.addItem(s);
-    }
+    
+    if (arg instanceof Update)
+    {
+        Update up = (Update)arg;
+        Enumeration e ;
 
-    modes.removeAll();
-    for (e =mem.getModes().elements();
-	 e.hasMoreElements();
-	 modes.addItem(((Mode) e.nextElement()).predicateSymbol())) {}
+        if(up.motif.contains(Lexique.TYPES))
+        {
+            ClauseList cl = ((ILPMemory)up.o).getTypes();
+            e = cl.definitions().keys(); 
+            while (e.hasMoreElements()) 
+            {
+                s = (String) e.nextElement();
+                s = s.substring(0,s.lastIndexOf("/"));
+                typechoice.addItem(s);
+            }
+        }
+      
+        if(up.motif.contains(Lexique.MODES))
+        {
+            ModeList ml = ((ILPMemory)up.o).getModes();
+            modes.removeAll();
+            for (e = ml.elements();
+            e.hasMoreElements();
+            modes.add(((Mode) e.nextElement()).predicateSymbol())) {} 
+        }
+    }
   }
 
 

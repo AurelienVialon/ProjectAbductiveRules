@@ -1,6 +1,9 @@
 package ILP;
 
+import ILP.Engine.ILPEngine;
+import ILP.Engine.ILPMemory;
 import MVC.Vue;
+import MVC.communications.Message;
 import myawt.GridBag;
 import java.awt.*;
 import java.awt.event.*;
@@ -25,6 +28,8 @@ public class ILPDisplay extends Vue
   private final JTextArea output;
   private final Button run, stop, save, clear;
   
+  private ILPMemory mem;
+  
   private final GridBagLayout gridbag = new GridBagLayout();
 
   /**
@@ -32,7 +37,7 @@ public class ILPDisplay extends Vue
    * The parent ProgolInterface is passed to the panel
    * as a session so that the panel knows what to display
    * in its various Lists.
-   * @param session  The ProgolInterface session.
+     * @param fen
    */
   public ILPDisplay(FenetrePrincipale fen) 
   {
@@ -84,6 +89,15 @@ public class ILPDisplay extends Vue
 	      GridBagConstraints.HORIZONTAL, 
 	      GridBagConstraints.CENTER,
 	      1.0, 0.0, 10, 10, 10, 10);
+    
+    ((FenetrePrincipale)this.f).ILP_Predicats_Results.addMouseListener(new java.awt.event.MouseAdapter()
+    {
+        @Override
+        public void mouseClicked(java.awt.event.MouseEvent mouseEvent)
+        {
+            ChangeResults(); 
+        }
+    });
   }
 
   private int runSession()
@@ -109,6 +123,7 @@ public class ILPDisplay extends Vue
   /**
    * Handle Button press events.
    */
+  @Override
   public final void actionPerformed(ActionEvent event) 
   {
     if (event.getSource() == run) 
@@ -134,9 +149,47 @@ public class ILPDisplay extends Vue
       }
     }
   }
+    
+    public void UpdateResults()
+    {
+        FenetrePrincipale f = (FenetrePrincipale)this.f;
+        
+        f.resetIPLResults();
 
+        f.ILP_Predicats_Results.setListData(this.mem.predicats.getTabPrefix());
+        f.ILP_Predicats_Results.setSelectedIndex(0);
+        
+        String[] tab = this.mem.getResult(f.ILP_Predicats_Results.getSelectedValue());
+        
+        f.ILP_Clauses_Results.setText("");
+        
+        for(String s : tab )
+        {
+            f.ILP_Clauses_Results.append(s + "\n"); 
+        }
+    }
+    public void ChangeResults()
+    {   
+        FenetrePrincipale f = (FenetrePrincipale)this.f;
+        String[] tab = this.mem.getResult(f.ILP_Predicats_Results.getSelectedValue());
+        
+        f.ILP_Clauses_Results.setText("");
+        
+        for(String s : tab )
+        {
+            f.ILP_Clauses_Results.append(s + "\n"); 
+        }
+    }
     @Override
-    public void update(Observable o, Object ob) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void update(Observable o, Object ob) 
+    {
+        if(o instanceof ILPEngine && ob instanceof Message)
+        {
+            Message msg = (Message)ob;
+            
+            this.mem = (ILPMemory)msg.o;
+            
+            this.UpdateResults();
+        }
     }
 }

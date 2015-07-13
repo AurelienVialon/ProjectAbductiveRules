@@ -7,6 +7,7 @@ package nomprol;
 
 
 import ASP.ASPManager;
+import ILP.ILPDisplay;
 import ILP.ILPManager;
 import ProgolInterface.ProgolInterface;
 import java.awt.Color;
@@ -112,7 +113,7 @@ public class FenetrePrincipale extends JFrame
         this.fichierMenu.addSeparator();
  
         this.ILP_Manager = new ILPManager(this);
-        this.ILP_Manager.Init();
+        this.Exec_Display = ((ILPDisplay)this.ILP_Manager.Init());
         
         this.ILP_Display = new ProgolInterface(this);
         this.ILP_Display.setBackground(Color.white);

@@ -3,8 +3,6 @@
  * and open the template in the editor.
  */
 package MVC.communications;
-
-import MVC.Modele;
 /**
  *
  * @author Aurélien Vialon
@@ -16,7 +14,7 @@ public class Message
     public Object o;
     
     public Object signature;
-    public Modele destinataire;
+    public Object destinataire;
     
     public long temps_creation;
     
@@ -25,6 +23,15 @@ public class Message
         this.s = "";
         this.signature = null;
         this.o = null;
+        
+        this.temps_creation = System.nanoTime();       
+    }
+     public Message ( Object ob )
+    {
+        this.s = "";
+        this.destinataire = null;
+        this.signature = null;
+        this.o = ob;
         
         this.temps_creation = System.nanoTime();       
     }

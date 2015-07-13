@@ -3,6 +3,7 @@ package ProgolInterface;
 import ILP.Engine.ILPMemory;
 import ILP.Engine.ModeArg;
 import ILP.Engine.Mode;
+import MVC.communications.Update;
 import myawt.GridBag;
 import PrologParse.*;
 import java.awt.*;
@@ -26,7 +27,6 @@ import nomprol.FenetrePrincipale;
 class ClauseDefineDialog extends Dialog implements ActionListener 
 {
   private FenetrePrincipale f;
-  private ILPMemory mem;
   private Button okay, cancel;
   private Checkbox positive, negative;
   private CheckboxGroup cbg;
@@ -44,12 +44,11 @@ class ClauseDefineDialog extends Dialog implements ActionListener
    * @param session The Progol Interface session.
    * @param symbol The predicate symbol of the clause to be defined.
    */
-  public ClauseDefineDialog(FenetrePrincipale f, ILPMemory mem,  String symbol) 
+  public ClauseDefineDialog(FenetrePrincipale f,  String symbol) 
   {
     super((JFrame) f, true);
 
     this.f = f;
-    this.mem = mem;
     
     this.setLocation(new Point(f.getLocation().x+150,
 			       f.getLocation().y+200));
@@ -157,11 +156,14 @@ class ClauseDefineDialog extends Dialog implements ActionListener
     this.pack();
   }
 
-  private final Mode getModeFor(String symbol) {
-    if (mem.getModes().hasModeFor(symbol)) {
+  private Mode getModeFor(String symbol) 
+  {
+    if (mem.getModes().hasModeFor(symbol)) 
+    {
       return mem.getModes().getModeFor(symbol);    
     }
-    else {
+    else 
+    {
       String name = symbol.substring(0,symbol.lastIndexOf("/"));
       int arity = 
 	Integer.parseInt(symbol.substring(symbol.lastIndexOf("/")+1));
@@ -172,7 +174,8 @@ class ClauseDefineDialog extends Dialog implements ActionListener
   /**
    * @return the clause defined by the user as a String.
    */
-  public final String getClause() {
+  public final String getClause() 
+  {
     if (clausedef instanceof Panel) {
       String result;
       if (mode.isHead() && negative.getState()) { result = " :- "; }
@@ -203,7 +206,8 @@ class ClauseDefineDialog extends Dialog implements ActionListener
   /**
    * Handle button press events.
    */
-  public final void actionPerformed(ActionEvent event) {
+  public final void actionPerformed(ActionEvent event) 
+  {
     if (event.getSource() == okay) {
       this.setVisible(false);
       this.dispose();

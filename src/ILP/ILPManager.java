@@ -8,7 +8,6 @@ package ILP;
 
 import ASP.ASPManager;
 import ILP.Engine.ILPEngine;
-import ILP.Engine.ILPMemory;
 import Interfaces.ILPtoASP;
 import MVC.Controleur;
 import MVC.Modele;
@@ -21,52 +20,14 @@ import nomprol.FenetrePrincipale;
  * 
  */
 public class ILPManager extends Controleur
-{ 
-    private final FenetrePrincipale f;
-    
+{   
+    FenetrePrincipale f;
     public ILPtoASP ilasp;
     
     public ILPManager ( FenetrePrincipale  f )
     {
+        super();
         this.f = f;
-        this.f.ILP_Predicats_Results.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent mouseEvent)
-            {
-               ChangeResults(); 
-            }
-        });
-        
-        this.initModele();
-    }
-    
-    public void UpdateResults()
-    {
-        this.f.resetIPLResults();
-
-        this.f.ILP_Predicats_Results.setListData(((ILPEngine)this.m).predicats.getTabPrefix());
-        this.f.ILP_Predicats_Results.setSelectedIndex(0);
-        
-        String[] tab = ((ILPEngine)this.m).getResult(this.f.ILP_Predicats_Results.getSelectedValue());
-        
-        this.f.ILP_Clauses_Results.setText("");
-        
-        for(String s : tab )
-        {
-            this.f.ILP_Clauses_Results.append(s + "\n"); 
-        }
-    }
-    public void ChangeResults()
-    {       
-        String[] tab = ((ILPEngine)this.m).getResult(this.f.ILP_Predicats_Results.getSelectedValue());
-        
-        this.f.ILP_Clauses_Results.setText("");
-        
-        for(String s : tab )
-        {
-            this.f.ILP_Clauses_Results.append(s + "\n"); 
-        }
     }
     
     public void Stop ()
@@ -74,12 +35,6 @@ public class ILPManager extends Controleur
         ((ILPEngine)this.m).destroy();
     }
     
-    @Override
-    public String toString()
-    {
-        return ((ILPEngine)this.m).predicats.toString();
-    }
-
     @Override
     protected Modele initModele() 
     {
@@ -95,10 +50,5 @@ public class ILPManager extends Controleur
     {
         //Define the interface between ILP and ASP
         this.ilasp = new ILPtoASP(i);
-    }
-    
-    public ILPMemory getILPMemory ()
-    {
-       return ((ILPEngine)this.m).getMemory();
     }
 }

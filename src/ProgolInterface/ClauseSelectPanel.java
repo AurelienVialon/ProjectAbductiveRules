@@ -1,7 +1,9 @@
 package ProgolInterface;
 
+import IA.Agent;
 import ILP.Engine.ILPMemory;
-import ILP.ILPManager;
+import MVC.communications.Lexique;
+import MVC.communications.Update;
 import myawt.GridBag;
 import PrologParse.*;
 import java.awt.*;
@@ -18,10 +20,10 @@ import nomprol.FenetrePrincipale;
  * @version 2.0
  * @see ProgolInterface
  */
-class ClauseSelectPanel extends JPanel implements ActionListener, ItemListener 
+class ClauseSelectPanel extends JPanel implements Observer, ActionListener, ItemListener 
 {
   private FenetrePrincipale f;
-  private final ILPMemory mem;
+
   private final java.awt.List predicates, clauses;
   private final JButton add, delete, manual;
   private final JPanel buttonpanel;
@@ -35,10 +37,11 @@ class ClauseSelectPanel extends JPanel implements ActionListener, ItemListener
    * in its various Lists.
    * @param session  The ProgolInterface session.
    */
-  public ClauseSelectPanel(FenetrePrincipale fen) 
+  public ClauseSelectPanel(FenetrePrincipale fen, Agent ag) 
   {
     this.f = fen;
-    this.mem = this.f.ILP_Manager.getILPMemory();
+    ag.addObserver(this);
+    
     this.setBackground(Color.white);
     
     predicates = new java.awt.List(15,false);
@@ -85,34 +88,43 @@ class ClauseSelectPanel extends JPanel implements ActionListener, ItemListener
 		      GridBagConstraints.HORIZONTAL,
 		      GridBagConstraints.NORTHWEST, 
 		      1.0, 0.0, 10, 10, 10, 10);
-
-    this.update();
   }
 
-  /**
-   * Update the Panel.
-   * Ensures that the information displayed is the same as
-   * the information stored in the ProgolInterface session.
-   */
-  public final void update() {
+    
+  @Override
+  public void update(Observable o, Object arg) 
+  {
     add.setEnabled(false);
     delete.setEnabled(false);
     predicates.removeAll();
     clauses.removeAll();
-    for (Enumeration e = mem.getClauses().definitions().keys();
-	 e.hasMoreElements();
-	 predicates.addItem((String) e.nextElement())) {}
+    if( arg instanceof Update)
+    {
+        Update up = (Update)arg;
+        
+        if(up.motif.contains(Lexique.CLAUSES))
+        {
+           ClauseList cl = ((ILPMemory)up.o).getClauses();
+              
+            for (Enumeration e = cl.definitions().keys();
+            e.hasMoreElements();
+            predicates.add((String) e.nextElement())) {}
+        }
+    }
   }
+ 
 
   /**
    * Handle Button press events.
    */
-  public final void actionPerformed(ActionEvent event) {
-    if (event.getSource() == manual || event.getSource() == add) {
+  public final void actionPerformed(ActionEvent event) 
+  {
+    if (event.getSource() == manual || event.getSource() == add) 
+    {
       String s;
       if (event.getSource() == manual) { s = ""; }
       else { s = predicates.getSelectedItem(); }
-      ClauseDefineDialog cdd = new ClauseDefineDialog(f, mem, s);
+      ClauseDefineDialog cdd = new ClauseDefineDialog(f, s);
       cdd.setVisible(true);;
       if (!cdd.cancelled()) {
 	String cl = cdd.getClause();
