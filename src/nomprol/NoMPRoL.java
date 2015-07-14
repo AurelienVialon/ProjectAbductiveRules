@@ -5,6 +5,10 @@
  */
 package nomprol;
 
+import ILP.SelfMadeEngine.Basiques.Predicat;
+
+
+
 /**
  *
  * @author Aurélien Vialon
@@ -16,6 +20,8 @@ public class NoMPRoL
      */
     public static void main(String[] args) 
     {
+        Predicat p = new Predicat("Parent_of(Parent, Child):-father_of(Parent, Child).");
+
         FenetrePrincipale f = new FenetrePrincipale();
         f.setVisible(true);             
     }    
