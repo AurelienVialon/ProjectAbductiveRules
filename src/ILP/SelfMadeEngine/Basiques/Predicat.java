@@ -84,6 +84,10 @@ public final class Predicat
     {
         return this.c;
     }   
+    public String obtNom()
+    {
+        return this.p.nom;
+    }      
 
     public String obtPredicat()
     {

@@ -14,11 +14,7 @@ import java.util.ArrayList;
 public class Clause extends ArrayList<Type>
 {
     public String nom;
-    
-    public Clause ()
-    {
-        
-    }
+ 
     public Clause (String s)
     {
         this.nom = ParseClauseNom(s);

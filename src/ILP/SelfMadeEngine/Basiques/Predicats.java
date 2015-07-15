@@ -5,27 +5,28 @@
  */
 package ILP.SelfMadeEngine.Basiques;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Aurélien Vialon
  */
-public final class Atome
+public class Predicats extends ArrayList<Predicat>
 {
-    public String nom;
-    public Types t;
+    public void ajt(Predicat p)
+    {
+        this.add(p);
+    }
+    public void ajt(Predicats p)
+    {
+        for(Predicat pr : p)
+        {
+            this.ajt(pr);
+        }
+    }
     
-    public Atome (String s)
+    public void vider()
     {
-        this.nom = s;
-        this.t = new Types();
-    }
-    public Atome (String s, Type t)
-    {
-        this(s);
-        this.ajtType(t);
-    }
-    public void ajtType(Type t)
-    {
-        this.t.ajt(t);
+        this.clear();
     }
 }

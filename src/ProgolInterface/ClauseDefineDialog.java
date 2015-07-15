@@ -3,7 +3,6 @@ package ProgolInterface;
 import ILP.Engine.ILPMemory;
 import ILP.Engine.ModeArg;
 import ILP.Engine.Mode;
-import MVC.communications.Update;
 import myawt.GridBag;
 import PrologParse.*;
 import java.awt.*;

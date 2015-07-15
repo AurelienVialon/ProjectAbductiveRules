@@ -5,15 +5,17 @@
  */
 package ILP.SelfMadeEngine.Basiques;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Aurélien Vialon
  */
-public class Type
+public class Types extends ArrayList<Type>
 {
-    public String Type;
-    public Type (String s)
+    public void ajt(Type t)
     {
-      this.Type = s;  
+        if(!this.contains(t))
+            this.add(t);
     }
 }

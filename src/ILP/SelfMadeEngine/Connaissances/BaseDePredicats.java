@@ -6,6 +6,7 @@
 package ILP.SelfMadeEngine.Connaissances;
 
 import ILP.SelfMadeEngine.Basiques.Predicat;
+import ILP.SelfMadeEngine.Basiques.Predicats;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -17,14 +18,28 @@ import java.util.Set;
  * @author Aurélien Vialon
  * 
  */
-public class BaseDePredicats extends HashMap<String, ArrayList<Predicat>> 
+public class BaseDePredicats extends HashMap<String, Predicats> 
 {  
     public BaseDePredicats() 
     {
        super();
     } 
-    
-    public void add(String nom, String p)
+    public void ajt(Predicat p)
+    {
+        if(!this.containsKey(p.obtNom()))
+        {
+            this.put(p.obtNom(), new Predicats());
+        } 
+        this.get(p.obtNom()).add(p);
+    }
+    public void ajt(Predicats p)
+    {
+        for(Predicat pr : p)
+        {
+            this.ajt(pr);
+        }
+    }
+    public void ajt(String nom, String p)
     {
         ArrayList<Predicat> pr = this.get(nom);
         Predicat npr = null;
@@ -45,23 +60,23 @@ public class BaseDePredicats extends HashMap<String, ArrayList<Predicat>>
         }
         else
         {
-            ArrayList<Predicat> lpr = new ArrayList<>();
+            Predicats lpr = new Predicats();
             lpr.add(npr);
             this.put(nom, lpr); 
         }
     }
     
-    public Set<Entry<String, ArrayList<Predicat>>> getAllKeys ()
+    public Set<Entry<String, Predicats>> getAllKeys ()
     {
        return this.entrySet();
     }
     
     public ArrayList<Predicat> getList()
     {
-        ArrayList<Predicat> l = new ArrayList<>();
+        Predicats l = new Predicats();
                 
                 
-        for(Entry<String, ArrayList<Predicat>> i : this.entrySet()) 
+        for(Entry<String, Predicats> i : this.entrySet()) 
         {
             l.addAll(((ArrayList<Predicat>)i.getValue()));
         }
@@ -73,7 +88,7 @@ public class BaseDePredicats extends HashMap<String, ArrayList<Predicat>>
         
         int n = 0;
                     
-        for(Entry<String, ArrayList<Predicat>> i : this.entrySet()) 
+        for(Entry<String, Predicats> i : this.entrySet()) 
         {
             l[n] = i.getKey();
             n++;
@@ -127,7 +142,7 @@ public class BaseDePredicats extends HashMap<String, ArrayList<Predicat>>
     {
         ArrayList<String> l = new ArrayList<>();
         
-        for(Entry<String, ArrayList<Predicat>> i : this.entrySet()) 
+        for(Entry<String, Predicats> i : this.entrySet()) 
         {
             for ( Predicat p : i.getValue() )
             {
@@ -141,7 +156,7 @@ public class BaseDePredicats extends HashMap<String, ArrayList<Predicat>>
     {
         String ret = "";
         
-        for(Entry<String, ArrayList<Predicat>> i : this.entrySet()) 
+        for(Entry<String, Predicats> i : this.entrySet()) 
         {
             for( Predicat p : ((ArrayList<Predicat>)i.getValue()))
             {
@@ -149,5 +164,10 @@ public class BaseDePredicats extends HashMap<String, ArrayList<Predicat>>
             }
         }
         return ret;
+    }
+    
+    public void vider ()
+    {
+        this.clear();
     }
 }

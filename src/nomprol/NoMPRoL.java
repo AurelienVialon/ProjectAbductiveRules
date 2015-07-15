@@ -5,8 +5,7 @@
  */
 package nomprol;
 
-import ILP.SelfMadeEngine.Basiques.Predicat;
-
+import ILP.SelfMadeEngine.Connaissances.BaseDeConnaissances;
 
 
 /**
@@ -20,8 +19,8 @@ public class NoMPRoL
      */
     public static void main(String[] args) 
     {
-        Predicat p = new Predicat("Parent_of(Parent, Child):-father_of(Parent, Child).");
-
+        BaseDeConnaissances bc = new BaseDeConnaissances("/home/aurelien/Bureau/Projet/famille.pl");
+        
         FenetrePrincipale f = new FenetrePrincipale();
         f.setVisible(true);             
     }    

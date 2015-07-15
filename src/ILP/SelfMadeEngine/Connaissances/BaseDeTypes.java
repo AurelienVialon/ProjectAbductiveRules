@@ -6,26 +6,51 @@
 package ILP.SelfMadeEngine.Connaissances;
 
 import ILP.SelfMadeEngine.Basiques.Atome;
+import ILP.SelfMadeEngine.Basiques.Atomes;
 import ILP.SelfMadeEngine.Basiques.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  *
  * @author Aurélien Vialon
  */
-public class BaseDeTypes extends HashMap<String, ArrayList<Atome>>
+public class BaseDeTypes extends HashMap<String, Atomes>
 {
+    public void ajt(String s)
+    {
+        if(!this.containsKey(s))
+        {
+           this.put(s, null);         
+        }
+    }
     public void ajt(Type t)
     {
-        this.put(t.Type, null);
+        if(!this.containsKey(t.Type))
+        {
+           this.put(t.Type, new Atomes());         
+        }
     }
     public void ajt(Atome a)
     {
-        if(!this.containsKey(a.Type))
+        for (Type t : a.t)
         {
-          this.ajt(new Type(a.Type));
+            if(!this.containsKey(t.Type))
+            {
+                Type nt = new Type(t.Type);
+                this.ajt(nt);
+                t = nt;               
+            }
+            this.get(t.Type).add(a);           
         }
-        this.get(a.Type).add(a);
+    }
+    
+    public Atomes donneAtomesType (String t)
+    {
+        return this.get(t);
+    }
+    
+    public void vider()
+    {
+        this.clear();
     }
 }

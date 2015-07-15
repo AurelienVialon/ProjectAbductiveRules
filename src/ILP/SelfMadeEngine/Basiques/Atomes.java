@@ -5,15 +5,21 @@
  */
 package ILP.SelfMadeEngine.Basiques;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Aurélien Vialon
  */
-public class Type
+public class Atomes extends ArrayList<Atome>
 {
-    public String Type;
-    public Type (String s)
+    public void ajt(Atome a)
     {
-      this.Type = s;  
+        this.add(a);
+    }
+    
+    public void vider()
+    {
+        this.clear();
     }
 }
