@@ -9,7 +9,7 @@ package ILP.SelfMadeEngine.Basiques;
  *
  * @author Aurélien Vialon
  */
-public final class Atome
+public class Atome
 {
     public String nom;
     public Types t;

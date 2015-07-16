@@ -11,45 +11,48 @@ import java.util.ArrayList;
  *
  * @author Aurélien Vialon
  */
-public class Clause extends ArrayList<Type>
+public abstract class Clause <T> extends ArrayList<T>
 {
     public String nom;
+    public Clauses Instances;
  
+    public Clause ()
+    {
+        this.Instances = new Clauses();
+    }
     public Clause (String s)
     {
         this.nom = ParseClauseNom(s);
+        
+        this.Instances = new Clauses();
+        
         this.addAll(ParseClauseConditions(s));
+    }
+    public Clause (String s, boolean a)
+    {
+        this.nom = s;
+        this.Instances = new Clauses();
     }
     
     public static String ParseClauseNom (String s)
     {
        return s.substring(0, s.indexOf("("));
     }
-    public static ArrayList ParseClauseConditions (String s)
+    
+    public abstract ArrayList<T> ParseClauseConditions(String s);
+    
+    public void ajt( T t )
     {
-       ArrayList<Type> l = new ArrayList<>();
-       
-       String conditions = s.substring(s.indexOf("(") + 1, s.indexOf(")"));
-       
-       if(conditions.length() > 0 )
-       {
-                  
-            conditions = conditions.replaceAll(" ", "");
-       
-            int i = conditions.indexOf(",");
-       
-            while(i != -1)
-            {
-                String condtemp = conditions.substring(0,i);
-          
-                l.add(new Type(condtemp));
-          
-                conditions = conditions.substring(conditions.indexOf(condtemp) + condtemp.length() + 1);
-          
-                i = conditions.indexOf(",");
-            }
-            l.add(new Type(conditions)); 
-       }      
-       return l;
+        this.add(t);
+    }
+
+    public String donneNom()
+    {
+        return this.nom;
+    }
+    
+    public void ajtInstance(Clause c)
+    {
+        this.Instances.add(c);
     }
 }

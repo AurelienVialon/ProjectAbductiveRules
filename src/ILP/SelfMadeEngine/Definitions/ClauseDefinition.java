@@ -3,28 +3,31 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ILP.SelfMadeEngine;
+package ILP.SelfMadeEngine.Definitions;
 
 import ILP.SelfMadeEngine.Basiques.Clause;
-import ILP.SelfMadeEngine.Basiques.Variable;
-import ILP.SelfMadeEngine.Basiques.Variables;
+import ILP.SelfMadeEngine.Basiques.Type;
+import ILP.SelfMadeEngine.Basiques.Types;
 import java.util.ArrayList;
 
 /**
  *
- * @author Auréline Vialon
+ * @author Aurélien Vialon
  */
-public class Prefixe extends Clause<Variable>
+public class ClauseDefinition extends Clause<Type>
 {
-    public Prefixe(String p)
+    public ClauseDefinition(String s) 
     {
-        super(p);
-    }
-
+        super(s);
+    }  
+    public ClauseDefinition(String s, boolean a) 
+    {
+        super(s, a);
+    }  
     @Override
-   public ArrayList<Variable> ParseClauseConditions(String s)
+    public ArrayList<Type> ParseClauseConditions(String s)
     {
-       Variables l = new Variables();
+       Types l = new Types();
 
        String conditions = s.substring(s.indexOf("(") + 1, s.indexOf(")"));
        
@@ -38,13 +41,13 @@ public class Prefixe extends Clause<Variable>
             {
                 String condtemp = conditions.substring(0,i);
           
-                l.add(new Variable(condtemp));
+                l.add(new Type(condtemp));
           
                 conditions = conditions.substring(conditions.indexOf(condtemp) + condtemp.length() + 1);
           
                 i = conditions.indexOf(",");
             }
-            l.add(new Variable(conditions)); 
+            l.add( new Type (conditions)); 
        }      
        return l;
     }

@@ -67,6 +67,7 @@ public class BaseObjets
     {
         return this.ba.donne();
     }
+
     public boolean existeType (String s)
     {
         return this.bt.containsKey(s);

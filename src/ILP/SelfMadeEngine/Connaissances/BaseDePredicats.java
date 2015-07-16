@@ -65,7 +65,14 @@ public class BaseDePredicats extends HashMap<String, Predicats>
             this.put(nom, lpr); 
         }
     }
-    
+    public Predicats donne(String n)
+    {
+        Predicats p = null;
+        
+            p = this.get(n);
+        
+        return p;
+    }
     public Set<Entry<String, Predicats>> getAllKeys ()
     {
        return this.entrySet();
@@ -169,5 +176,18 @@ public class BaseDePredicats extends HashMap<String, Predicats>
     public void vider ()
     {
         this.clear();
+    }
+    
+    public Predicats nouveau (String s)
+    {
+       String nom = Predicat.ParsePredicatNom(s);
+       Predicats p  =  this.get(nom);
+       
+       if(p == null)
+       {
+           p = new Predicats ();
+           this.ajt(nom, s);
+       }
+       return p;
     }
 }

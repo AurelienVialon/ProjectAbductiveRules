@@ -18,7 +18,7 @@ public class NoMPRoL
      * @param args the command line arguments
      */
     public static void main(String[] args) 
-    {
+    {  
         BaseDeConnaissances bc = new BaseDeConnaissances("/home/aurelien/Bureau/Projet/famille.pl");
         
         FenetrePrincipale f = new FenetrePrincipale();

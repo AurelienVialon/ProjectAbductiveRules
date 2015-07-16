@@ -13,15 +13,14 @@ import java.util.HashMap;
  *
  * @author Aurélien Vialon
  */
-public class BaseDeClauses extends HashMap<String, Clauses>
+public class BaseDeClauses extends HashMap<String, Clause>
 {
     public void ajt(Clause c)
     {
-        if(!this.containsKey(c.nom))
+        if(!this.containsKey(c.donneNom()))
         {
-           this.put(c.nom, new Clauses());
+           this.put(c.donneNom(), c);
         }
-        this.get(c.nom).add(c);
     }
     public void ajt(Clauses c)
     {
@@ -31,7 +30,7 @@ public class BaseDeClauses extends HashMap<String, Clauses>
         }
     }
     
-    public Clauses donne (String s)
+    public Clause donne (String s)
     {
         return this.get(s);
     }

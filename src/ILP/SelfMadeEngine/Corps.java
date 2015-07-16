@@ -5,8 +5,8 @@
  */
 package ILP.SelfMadeEngine;
 
-import ILP.SelfMadeEngine.Basiques.Clause;
 import ILP.SelfMadeEngine.Basiques.Clauses;
+import ILP.SelfMadeEngine.Definitions.ClauseInstanciee;
 
 /**
  *
@@ -45,7 +45,7 @@ public class Corps extends Clauses
                 }
             }
         
-            c.add(new Clause(temp));
+            c.add(new ClauseInstanciee(temp));
             s = s.replace(temp, "");
         } 
         return c;

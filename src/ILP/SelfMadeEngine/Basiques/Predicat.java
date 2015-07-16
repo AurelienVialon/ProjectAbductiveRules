@@ -53,7 +53,10 @@ public final class Predicat
        this.c = new Corps(ParsePredicatCorps(p));
     }  
 
-    
+    public static String ParsePredicatNom (String s)
+    {
+       return s.substring(0, s.indexOf("("));
+    }
     public static String ParsePredicatPrefixe (String s)
     {
        return s.substring(0, s.indexOf(":"));
@@ -86,8 +89,13 @@ public final class Predicat
     }   
     public String obtNom()
     {
-        return this.p.nom;
+        return this.p.donneNom();
     }      
+    
+    public void setPrefixe(Prefixe p)
+    {
+        this.p = p;
+    }
 
     public String obtPredicat()
     {

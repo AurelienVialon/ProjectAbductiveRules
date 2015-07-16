@@ -13,6 +13,15 @@ import java.util.ArrayList;
  */
 public class Types extends ArrayList<Type>
 {
+    public Types ()
+    {
+         super();      
+    }
+    public Types (Type t)
+    {
+        super();
+        this.add(t);
+    }
     public void ajt(Type t)
     {
         if(!this.contains(t))
