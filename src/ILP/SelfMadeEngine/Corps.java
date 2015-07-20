@@ -50,4 +50,24 @@ public class Corps extends Clauses
         } 
         return c;
     }
+    
+    @Override
+    public String toString()
+    {
+        String s = "";
+
+        int i = this.size() - 1;
+        
+        while(i > -1) 
+        {
+            s+= this.get(i).toString();
+            
+            if(i > 0)
+                s+=",";
+            i--;
+        }
+        s+= ".";
+        
+        return s;
+    }
 }

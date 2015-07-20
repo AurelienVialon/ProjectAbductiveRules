@@ -27,4 +27,15 @@ public class Types extends ArrayList<Type>
         if(!this.contains(t))
             this.add(t);
     }
+    @Override
+    public String toString()
+    {
+        String s = "";
+        
+        for(Type t : this) 
+        {
+            s+= " " + t.nom;
+        }
+        return s;
+    }
 }

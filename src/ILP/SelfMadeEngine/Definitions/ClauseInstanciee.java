@@ -92,4 +92,22 @@ public class ClauseInstanciee extends Clause<Atome>
        }      
         return l;
     }
+    
+    @Override
+    public String toString()
+    {
+        String s = this.nom +"(" ;
+        int i = this.size() - 1;
+        
+        while(i > -1) 
+        {
+            s+= this.get(i).nom;
+            
+            if(i > 0)
+                s+=",";
+            i--;
+        }
+        s+= ")";
+        return s;
+    }
 }

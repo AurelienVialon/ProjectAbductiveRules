@@ -5,6 +5,8 @@
  */
 package ILP.SelfMadeEngine.Basiques;
 
+import ILP.SelfMadeEngine.Definitions.ClauseInstanciee;
+import ILP.SelfMadeEngine.Definitions.ClausesInstanciees;
 import java.util.ArrayList;
 
 /**
@@ -14,24 +16,24 @@ import java.util.ArrayList;
 public abstract class Clause <T> extends ArrayList<T>
 {
     public String nom;
-    public Clauses Instances;
- 
+    public ClausesInstanciees Instances;
+    
     public Clause ()
     {
-        this.Instances = new Clauses();
+        this.Instances = new ClausesInstanciees();
     }
     public Clause (String s)
     {
         this.nom = ParseClauseNom(s);
-        
-        this.Instances = new Clauses();
+               
+        this.Instances = new ClausesInstanciees();
         
         this.addAll(ParseClauseConditions(s));
     }
     public Clause (String s, boolean a)
     {
         this.nom = s;
-        this.Instances = new Clauses();
+        this.Instances = new ClausesInstanciees();
     }
     
     public static String ParseClauseNom (String s)
@@ -45,14 +47,31 @@ public abstract class Clause <T> extends ArrayList<T>
     {
         this.add(t);
     }
-
+    
     public String donneNom()
     {
         return this.nom;
     }
     
-    public void ajtInstance(Clause c)
+    public void ajtInstance(ClauseInstanciee c)
     {
         this.Instances.add(c);
+    }
+    @Override
+    public String toString()
+    {
+        String s = "\n\t" + this.nom +"(" ;
+        int i = this.size() - 1;
+        
+        while(i > -1) 
+        {
+            s+= this.get(i).toString();
+            
+            if(i > 0)
+                s+=",";
+            i--;
+        }
+        s+= ")";
+        return s;
     }
 }

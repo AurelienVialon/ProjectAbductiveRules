@@ -7,7 +7,6 @@ package ILP.SelfMadeEngine.Connaissances;
 
 import ILP.SelfMadeEngine.Basiques.Atome;
 import ILP.SelfMadeEngine.Basiques.Atomes;
-import ILP.SelfMadeEngine.Basiques.Predicat;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -43,5 +42,17 @@ public class BaseAtomes extends HashMap<String, Atome>
     public void vider()
     {
         this.clear();
+    }
+    
+    @Override
+    public String toString()
+    {
+        String s = "";
+        
+        for(Entry<String, Atome> i : this.entrySet()) 
+        {
+            s+= "\n \"" + i.getKey() + "\" typé : " + i.getValue().t.toString();
+        }
+        return s;
     }
 }

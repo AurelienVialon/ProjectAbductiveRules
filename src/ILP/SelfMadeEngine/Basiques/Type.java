@@ -11,9 +11,30 @@ package ILP.SelfMadeEngine.Basiques;
  */
 public class Type
 {
-    public String Type;
+    public String nom;
+    public Type herite;
+    
+    private Atomes duType;
+    
+    
     public Type (String s)
     {
-      this.Type = s;  
+      this.nom = s.replaceAll(" ", "");  
+      this.duType = new Atomes();
+      this.herite = null;
+    }
+    public Atomes donneduType()
+    {
+        return this.duType;
+    }
+    public void ajt(Atome a)
+    {
+        this.duType.add(a);
+    }
+    
+    
+    public String toString()
+    {
+        return this.nom;
     }
 }

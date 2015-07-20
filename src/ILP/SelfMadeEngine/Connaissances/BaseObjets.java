@@ -10,6 +10,7 @@ import ILP.SelfMadeEngine.Basiques.Atomes;
 import ILP.SelfMadeEngine.Basiques.Type;
 import ILP.SelfMadeEngine.Basiques.Types;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -44,20 +45,18 @@ public class BaseObjets
     
     public Types donneTypes()
     {
-        Set types = this.bt.keySet();
         Types ret = new Types();
-        Iterator it = types.iterator();
         
-        while(it.hasNext())
+        for(Map.Entry<String, Type> i : this.bt.entrySet()) 
         {
-            ret.ajt((Type)it.next());
+            ret.add(i.getValue());
         }
         return ret;
     }
     
-    public Atomes donneAtomesType (String s)
+    public Type donneType (String s)
     {
-        return this.bt.donneAtomesType(s);
+        return this.bt.donneType(s);
     }
     public Atome donneAtome (String s)
     {

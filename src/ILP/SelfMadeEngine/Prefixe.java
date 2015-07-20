@@ -24,8 +24,8 @@ public class Prefixe extends Clause<Variable>
     @Override
    public ArrayList<Variable> ParseClauseConditions(String s)
     {
-       Variables l = new Variables();
-
+      Variables l = new Variables();
+ 
        String conditions = s.substring(s.indexOf("(") + 1, s.indexOf(")"));
        
        if(conditions.length() > 0 )
@@ -47,5 +47,23 @@ public class Prefixe extends Clause<Variable>
             l.add(new Variable(conditions)); 
        }      
        return l;
+    }
+      
+    @Override
+    public String toString()
+    {
+        String s = "\n\t" + this.nom +"(" ;
+        int i = this.size() - 1;
+        
+        while(i > -1) 
+        {
+            s+= this.get(i).nom;
+            
+            if(i > 0)
+                s+=",";
+            i--;
+        }
+        s+= ")";
+        return s;
     }
 }

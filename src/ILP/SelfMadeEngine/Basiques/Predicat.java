@@ -101,10 +101,8 @@ public final class Predicat
     {
         String ret = this.p.toString();
         
-        if(!"".equals(this.c))
-        {
-            ret = ret + ":-" + this.c.toString();
-        }
+        ret = ret + ":-" + this.c.toString();
+
         return ret;
     }
 }

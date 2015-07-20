@@ -5,7 +5,7 @@
  */
 package nomprol;
 
-import ILP.SelfMadeEngine.Connaissances.BaseDeConnaissances;
+import ILP.SelfMadeEngine.InstanceLogique;
 
 
 /**
@@ -19,7 +19,13 @@ public class NoMPRoL
      */
     public static void main(String[] args) 
     {  
-        BaseDeConnaissances bc = new BaseDeConnaissances("/home/aurelien/Bureau/Projet/famille.pl");
+        InstanceLogique il = new InstanceLogique("/home/aurelien/Bureau/Projet/famille.pl");
+        
+        System.out.println("Analyse des données débutée...");
+            il.Analyse();
+        System.out.println("Analyse terminée.");
+        System.out.println("Affichage des nouvelles données : ");
+        System.out.print(il.bc.afficheBaseDeConnaissance());
         
         FenetrePrincipale f = new FenetrePrincipale();
         f.setVisible(true);             

@@ -32,11 +32,12 @@ public class BaseDePredicats extends HashMap<String, Predicats>
         } 
         this.get(p.obtNom()).add(p);
     }
-    public void ajt(Predicats p)
+    public void ajt(String nom, Predicats p)
     {
-        for(Predicat pr : p)
+        if(this.containsKey(nom))
         {
-            this.ajt(pr);
+            for(Predicat pt : p)
+                this.get(nom).add(pt);
         }
     }
     public void ajt(String nom, String p)
@@ -165,9 +166,10 @@ public class BaseDePredicats extends HashMap<String, Predicats>
         
         for(Entry<String, Predicats> i : this.entrySet()) 
         {
+            ret += "\n \"" + i.getKey() + "\" avec " + i.getValue().size() + " définitions :";
             for( Predicat p : ((ArrayList<Predicat>)i.getValue()))
             {
-                ret = ret + p.obtPredicat() + "\n";
+                ret = ret + p.obtPredicat();
             }
         }
         return ret;
@@ -178,7 +180,7 @@ public class BaseDePredicats extends HashMap<String, Predicats>
         this.clear();
     }
     
-    public Predicats nouveau (String s)
+    public Predicat nouveau (String s)
     {
        String nom = Predicat.ParsePredicatNom(s);
        Predicats p  =  this.get(nom);
@@ -186,8 +188,11 @@ public class BaseDePredicats extends HashMap<String, Predicats>
        if(p == null)
        {
            p = new Predicats ();
-           this.ajt(nom, s);
-       }
-       return p;
+           this.put(nom, p);
+       }    
+       Predicat pt = new Predicat(s);
+       p.add(pt);
+          
+       return pt;
     }
 }

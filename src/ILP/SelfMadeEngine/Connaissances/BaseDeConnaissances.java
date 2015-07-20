@@ -12,12 +12,8 @@ import ILP.SelfMadeEngine.Basiques.Clauses;
 import ILP.SelfMadeEngine.Basiques.Predicat;
 import ILP.SelfMadeEngine.Basiques.Predicats;
 import ILP.SelfMadeEngine.Basiques.Type;
+import ILP.SelfMadeEngine.Basiques.Types;
 import ILP.SelfMadeEngine.Definitions.ClauseDefinition;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Iterator;
 
 /**
  *
@@ -35,19 +31,14 @@ public class BaseDeConnaissances
         this.bp = new BaseDePredicats();
         this.bo = new BaseObjets();
     }
-    public BaseDeConnaissances (String f)
-    {
-        this();
-        this.lectureFichier(f, true);
-    }
-    
+
     public void ajtPredicat(Predicat p)
     {
         this.bp.ajt(p);
     }
-    public void ajtPredicat(Predicats p)
+    public void ajtPredicat(String nom, Predicats p)
     {
-        this.bp.ajt(p);
+        this.bp.ajt(nom, p);
     }
     public void ajtClause(Clause c)
     {
@@ -62,7 +53,7 @@ public class BaseDeConnaissances
         }
         if(c instanceof ClauseInstanciee)
         {
-            cl.ajtInstance(c);
+            cl.ajtInstance((ClauseInstanciee)c);
         }
     }
     
@@ -78,6 +69,23 @@ public class BaseDeConnaissances
         }
         return a;
     } 
+    public Type nouveauType(String s)
+    {
+        Type t;
+        
+        t = this.bo.bt.donneType(s);
+        
+        if(t == null)
+        {
+            t = new Type(s);
+            this.bo.bt.ajt(t);
+        }     
+        return t;
+    }
+    public Predicat nouveauPredicat(String s)
+    {
+        return this.bp.nouveau(s);
+    }
     
     public void ajtClause(Clauses c)
     {
@@ -105,70 +113,16 @@ public class BaseDeConnaissances
         this.viderPredicats();
         this.viderObjets();
     }
-    public final void lectureFichier(String f, boolean ecrasement)
-    {
-        if(ecrasement)
-        {
-            this.vider();
-        }
-               
-        try
-        {
-            InputStream ips=new FileInputStream(f); 
-            InputStreamReader ipsr=new InputStreamReader(ips);
-            BufferedReader br=new BufferedReader(ipsr);
-            String ligne;
-            while ((ligne=br.readLine())!=null)
-            {
-                System.out.println(ligne);
-                
-                if(!ligne.startsWith("%"))
-                {     
-                    if(ligne.contains("modeh(") || ligne.contains("modeb("))
-                    {
-                      //Cas des modes déclarations, on ne les prends pas en considération.  
-                    }
-                    else if(ligne.contains("(") && ligne.contains(")"))
-                    {
-                        //Cas des Typages, des définitions de clauses et aussi de prédicats.                      
-                        if(!ligne.contains(",") && !ligne.contains(":-"))
-                        {
-                            //Cas du typage
-                            String t = ligne.substring(0, ligne.indexOf("("));
-                            String at = ligne.substring(ligne.indexOf("(") + 1, ligne.indexOf(")"));
-                            
-                            Atome a = this.nouveauAtome(at);
-                            
-                            //A changer !
-                            Type ty = new Type(t);
-                            
-                            a.ajtType(ty);
-                        }
-                        else if(!ligne.contains(":-"))
-                        {
-                           //Cas de la définition de clauses. 
-                            this.ajtClause(new ClauseInstanciee(ligne, this));
-                        }
-                        else if(!ligne.startsWith(":-"))
-                        {
-                            //Cas de la définition de prédicats.
-                            this.bp.nouveau(ligne);
-                        }
-                    }
-                    else
-                    {
-                        //Cas par défaut, à gérer.
-                    }
-                }
-            }
-            br.close(); 
-        }		
-        catch (Exception e)
-        {
-                System.out.println(e.toString());
-        }
-    }
+   
     
+    public Clauses donneClauses()
+    {
+        return this.bc.donne();
+    }
+    public Types donneTypes()
+    {
+       return this.bo.donneTypes();
+    }
     
     public boolean AnalyseType (String s)
     {
@@ -177,5 +131,50 @@ public class BaseDeConnaissances
     public boolean AnalyseAtome (String s)
     {
         return this.bo.existeAtome(s);
+    }
+    
+    public int nombreTypes()
+    {
+        return this.bo.bt.size();
+    }
+    public int nombreAtomes()
+    {
+        return this.bo.ba.size();
+    }  
+    public int nombreClauses()
+    {
+        return this.bc.size();
+    }
+    public int nombrePredicats()
+    {
+        return this.bp.size();
+    } 
+    
+    public String afficheBaseDeConnaissance()
+    {
+        String s = "";
+                    
+        s += "\n\n" + this.nombreTypes() + " types en mémoire : " + this.afficheTypes();
+        s += "\n\n" + this.nombreAtomes() + " atomes en mémoire : " + this.afficheAtomes();
+        s += "\n\n" + this.nombreClauses() + " clauses en mémoire : " + this.afficheClauses();
+        s += "\n\n" + this.nombrePredicats() + " prédicats en mémoire : " + this.affichePredicats();
+        
+        return s;
+    }
+    public String afficheTypes()
+    {
+        return this.bo.bt.toString();
+    }
+    public String afficheAtomes()
+    {
+        return this.bo.ba.toString();
+    }
+    public String afficheClauses()
+    {
+        return this.bc.toString();
+    }
+    public String affichePredicats()
+    {
+        return this.bp.toString();
     }
 }
